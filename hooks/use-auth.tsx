@@ -1,0 +1,337 @@
+"use client";
+
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  ReactNode,
+} from "react";
+import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
+
+interface User {
+  id: string;
+  email: string;
+  fname: string;
+  lname: string;
+  role: "buyer" | "seller" | "both" | "admin";
+  avatar?: string;
+  verified: boolean;
+  joinedDate: string;
+  location?: string;
+  type?: "individual" | "organization";
+}
+
+interface AuthContextType {
+  user: User | null;
+  isLoading: boolean;
+  selectedMode: "forward" | "reverse" | "marketplace";
+  setSelectedMode: (mode: "forward" | "reverse" | "marketplace") => void;
+  login: (
+    email: string,
+    password: string,
+    mode?: "forward" | "reverse" | "marketplace"
+  ) => Promise<{ success: boolean; error?: string }>;
+  register: (userData: {
+    email: string;
+    password: string;
+    fname: string;
+    lname: string;
+    location?: string;
+    role: "buyer" | "seller" | "both";
+    type?: "individual" | "organization";
+  }) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  isAuthenticated: boolean;
+}
+// Keep everything you already have above...
+// (useAuth, useAuthState, etc.)
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// export function AuthProvider({ children }: { children: ReactNode }) {
+//   const auth = useAuthState();  // I assume this is a custom hook you already have
+//   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+// }
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
+
+export function useAuthState() {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedMode, setSelectedModeState] = useState<
+    "forward" | "reverse" | "marketplace"
+  >("marketplace");
+  const router = useRouter();
+
+  // Load mode from localStorage on mount
+  useEffect(() => {
+    const savedMode = localStorage.getItem("auctionMode") as
+      | "forward"
+      | "reverse"
+      | "marketplace"
+      | null;
+    if (savedMode) {
+      setSelectedModeState(savedMode);
+    }
+  }, []);
+
+  // Save mode to localStorage when it changes
+  const setSelectedMode = (mode: "forward" | "reverse" | "marketplace") => {
+    setSelectedModeState(mode);
+    localStorage.setItem("auctionMode", mode);
+  };
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { data: authUser } = await supabase.auth.getUser();
+          if (authUser.user && authUser.user.id && authUser.user.email) {
+            const { data: profile, error: profileError } = await supabase
+              .from("profiles")
+              .select("*")
+              .eq("email", authUser.user.email)
+              .single();
+            if (
+              profileError &&
+              profileError.code !== "PGRST116" &&
+              !authUser.user.confirmed_at
+            ) {
+              throw new Error("Email not verified");
+            }
+            setUser({
+              id: authUser.user.id,
+              email: authUser.user.email,
+              fname: profile?.fname || "",
+              lname: profile?.lname || "",
+              role: (profile?.role as "buyer" | "seller" | "both") || "buyer",
+              avatar: profile?.avatar,
+              verified: !!authUser.user.confirmed_at,
+              joinedDate: authUser.user.created_at || new Date().toISOString(),
+              location: profile?.location,
+              type: profile?.type as "individual" | "organization",
+            });
+          }
+        }
+      } catch (error: any) {
+        console.error("Error checking auth:", error);
+        await supabase.auth.signOut();
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "SIGNED_IN" && session?.user) {
+          const fetchUser = async () => {
+            const { data: authUser } = await supabase.auth.getUser();
+            if (
+              authUser.user &&
+              authUser.user.id &&
+              authUser.user.email &&
+              authUser.user.confirmed_at
+            ) {
+              const { data: profile } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("email", authUser.user.email)
+                .single();
+              setUser({
+                id: authUser.user.id,
+                email: authUser.user.email,
+                fname: profile?.fname || "",
+                lname: profile?.lname || "",
+                role: (profile?.role as "buyer" | "seller" | "both") || "buyer",
+                avatar: profile?.avatar,
+                verified: !!authUser.user.confirmed_at,
+                joinedDate:
+                  authUser.user.created_at || new Date().toISOString(),
+                location: profile?.location,
+                type: profile?.type as "individual" | "organization",
+              });
+            } else {
+              await supabase.auth.signOut();
+              setUser(null);
+            }
+          };
+          fetchUser();
+        } else if (event === "SIGNED_OUT") {
+          setUser(null);
+        }
+      }
+    );
+
+    return () => authListener.subscription.unsubscribe();
+  }, []);
+
+  const login = async (
+    email: string,
+    password: string,
+    mode?: "forward" | "reverse" | "marketplace"
+  ) => {
+    setIsLoading(true);
+    try {
+      console.log("Attempting login with:", { email, password, mode });
+
+      // Save selected mode if provided
+      if (mode) {
+        setSelectedMode(mode);
+      }
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error)
+        throw new Error(
+          "Your EmailId is not verified. Kindly check your inbox to complete then verification process."
+        );
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: authUser } = await supabase.auth.getUser();
+        if (
+          authUser.user &&
+          authUser.user.id &&
+          authUser.user.email &&
+          authUser.user.confirmed_at
+        ) {
+          const { data: profile, error: profileError } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("email", email)
+            .single();
+          if (profileError && profileError.code !== "PGRST116")
+            throw profileError;
+          setUser({
+            id: authUser.user.id,
+            email: authUser.user.email,
+            fname: profile?.fname || "",
+            lname: profile?.lname || "",
+            role: (profile?.role as "buyer" | "seller" | "both") || "buyer",
+            avatar: profile?.avatar,
+            verified: !!authUser.user.confirmed_at,
+            joinedDate: authUser.user.created_at || new Date().toISOString(),
+            location: profile?.location,
+            type: profile?.type as "individual" | "organization",
+          });
+        } else {
+          await supabase.auth.signOut(); // Log out if not confirmed
+          setUser(null);
+          return {
+            success: false,
+            error: "Please verify your email before logging in.",
+          };
+        }
+      }
+      return { success: true };
+    } catch (error: any) {
+      console.error("Login error:", error);
+      return {
+        success: false,
+        error: error.message || "Invalid email or password",
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (userData: {
+    email: string;
+    password: string;
+    fname: string;
+    lname: string;
+    location?: string;
+    role: "buyer" | "seller" | "both";
+    type?: "individual" | "organization";
+  }) => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password,
+        options: {
+          data: {
+            fname: userData.fname,
+            lname: userData.lname,
+            location: userData.location,
+            role: userData.role,
+            type: userData.type,
+            verified: false,
+          },
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/verify`, // Redirect after verification
+        },
+      });
+      if (error) throw error;
+
+      if (data?.user) {
+        const { error: profileError } = await supabase.from("profiles").insert({
+          id: data.user.id,
+          email: userData.email,
+          fname: userData.fname,
+          lname: userData.lname,
+          role: userData.role,
+          location: userData.location,
+          type: userData.type,
+          created_at: new Date().toISOString(),
+          verified: false,
+        });
+        if (profileError) throw profileError;
+      }
+      setIsLoading(false);
+      return {
+        success: true,
+        message:
+          "Registration successful. Please check your email to verify your account.",
+      };
+    } catch (error: any) {
+      setIsLoading(false);
+      return {
+        success: false,
+        error: error.message || "Registration failed. Please try again.",
+      };
+    }
+  };
+
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+      router.push("/"); // Navigate to root path after logout
+      console.log("User logged out successfully and redirected to /");
+    } catch (error: any) {
+      console.error("Error during logout:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    user,
+    isLoading,
+    selectedMode,
+    setSelectedMode,
+    login,
+    register,
+    logout,
+    isAuthenticated: !!user,
+  };
+}
+
+export { AuthContext };
