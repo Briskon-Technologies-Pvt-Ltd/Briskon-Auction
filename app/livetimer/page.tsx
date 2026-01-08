@@ -97,24 +97,24 @@ function getEndDate(start: Date, duration: Duration) {
 //   const seconds = totalSeconds % 60;
 //   return `${hours > 0 ? hours + "h " : ""}${minutes}m ${seconds}s`;
 // }
- function formatDuration(ms: number) {
-    const totalSeconds = Math.floor(ms / 1000);
-    const days = Math.floor(totalSeconds / (3600 * 24));
-    const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+function formatDuration(ms: number) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const days = Math.floor(totalSeconds / (3600 * 24));
+  const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
-    let str = "";
-    if (days > 0) str += `${days}d `;
-    if (hours > 0 || days > 0) str += `${hours}h `;
-    str += `${minutes}m ${seconds}s`;
-    return str;
-  }
+  let str = "";
+  if (days > 0) str += `${days}d `;
+  if (hours > 0 || days > 0) str += `${hours}h `;
+  str += `${minutes}m ${seconds}s`;
+  return str;
+}
 /** Component */
 export default function LiveTimer({
   time,
   startTime,
-  className ,
+  className,
   duration,
   showPrefix = false,
 }: LiveTimerProps) {
@@ -168,10 +168,13 @@ export default function LiveTimer({
   if (!label) return null;
 
   const isLive = label === "Starting Now" || label.startsWith("Ends in");
- 
 
   return (
-    <span className={`font-semibold flex items-center gap-1 text-sm ${className || "text-red-600"}`}>
+    <span
+      className={`font-semibold flex items-center gap-1 text-xs ${
+        className || "text-red-600"
+      }`}
+    >
       <Clock className="h-3 w-3" />
       {label}
     </span>
@@ -179,4 +182,3 @@ export default function LiveTimer({
 }
 
 export { LiveTimer };
-

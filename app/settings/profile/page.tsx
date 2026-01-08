@@ -94,7 +94,7 @@ export default function ProfileSettingsPage() {
   useEffect(() => {
     setCountries(countriesData); // Only set once on mount
   }, []);
-  
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -293,10 +293,10 @@ export default function ProfileSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen dark:bg-gray-900 py-4">
-      <div className="grid grid-cols-[4fr_3fr] md:grid-cols-2 bg-white gap-10 rounded-lg  p-10 divide-x divide-gray-300">
+    <div className="min-h-screen dark:bg-gray-900 py-4 ">
+      <div className="grid grid-cols-[4fr_3fr] md:grid-cols-2 shadow-md bg-white gap-10 rounded-lg  p-10 divide-x divide-gray-300 border border-gray-300">
         {/* Header */}
-          <div className="pr-6">
+        <div className="pr-6">
           <div className="flex items-center justify-between">
             {/* Name */}
             <div className="flex flex-col -mt-[100px]">
@@ -307,9 +307,9 @@ export default function ProfileSettingsPage() {
               <div className="flex flex-wrap gap-x-1 gap-y-2 mt-1 text-xs text-gray-500 dark:text-gray-300">
                 <div>
                   {profile?.type
-  ? profile.type.charAt(0).toUpperCase() + profile.type.slice(1)
-  : "N/A"}
-
+                    ? profile.type.charAt(0).toUpperCase() +
+                      profile.type.slice(1)
+                    : "N/A"}
                 </div>
                 <div>
                   <div className="font-normal capitalize">
@@ -400,7 +400,8 @@ export default function ProfileSettingsPage() {
 
               {/* Fname, Lname */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 -mt-2">
-                <div><Label htmlFor="fname" className="text-gray-600 mb-2 block">
+                <div>
+                  <Label htmlFor="fname" className="text-gray-600 mb-2 block">
                     First Name
                   </Label>
                   <Input
@@ -599,114 +600,114 @@ export default function ProfileSettingsPage() {
           </div>
         </div>
         {/* Editable Form Section */}
-            <div className="pl-6">
-        <div className="flex flex-col items-end z-10">
-          <div className="w-full max-w-sm">
-            <div className="text-xl font-semibold text-gray-800 dark:text-white pb-2 mb-3 mt-20 flex items-start gap-2">
-              <Lock className="w-4 h-4 text-gray-600 dark:text-gray-300 animate-bounce" />
-              Change Password
-            </div>
-            <div className="w-full max-w-sm flex flex-col items-end space-y-4">
-              {/* <div className="grid grid-cols-2 gap-4 text-gray-600  items-end"> */}
-              {/* Current Password */}
-              <div className="w-full">
-                <Label
-                  htmlFor="old-password"
-                  className="text-gray-600 mb-2 block"
-                >
-                  Current Password
-                </Label>
-                <Input
-                  required
-                  id="old-password"
-                  type={showOldPassword ? "text" : "password"}
-                  placeholder="Current password"
-                  className="bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                />
-                <div
-                  className="absolute right-3 top-[38px] cursor-pointer text-gray-400"
-                  onClick={() => setShowOldPassword((prev) => !prev)}
-                >
-                  {showOldPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </div>
-              </div>
-
-              <div></div>
-
-              {/* New Password */}
-              <div className="w-full">
-                <Label
-                  htmlFor="new-password"
-                  className="text-gray-600 mb-2 block"
-                >
-                  New Password
-                </Label>
-                <Input
-                  required
-                  id="new-password"
-                  type={showNewPassword ? "text" : "password"}
-                  placeholder="New password"
-                  className="bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-                <div
-                  className="absolute right-3 top-[38px] cursor-pointer text-gray-400"
-                  onClick={() => setShowNewPassword((prev) => !prev)}
-                >
-                  {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </div>
-              </div>
-
-              <div></div>
-
-              {/* Confirm New Password */}
-              <div className="w-full">
-                <Label
-                  htmlFor="confirm-password"
-                  className="text-gray-600 mb-2 block"
-                >
-                  Confirm New Password
-                </Label>
-                <Input
-                  required
-                  id="confirm-password"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm password"
-                  className="bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <div
-                  className="absolute right-3 top-[38px] cursor-pointer text-gray-400"
-                  onClick={() => setShowConfirmPassword((prev) => !prev)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
-                </div>
-              </div>
-
-              <div></div>
-
-              {/* Button spanning full width */}
-            </div>
-            <div className="md:col-span-2 flex justify-start items-end mt-6">
-              <Button
-                variant="secondary"
-                size="sm"
-                className="bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-800 font-medium transition-colors duration-200 rounded-md shadow-sm px-5 py-2"
-                onClick={handleUpdatePassword}
-              >
+        <div className="pl-6">
+          <div className="flex flex-col items-end z-10">
+            <div className="w-full max-w-sm">
+              <div className="text-xl font-semibold text-gray-800 dark:text-white pb-2 mb-3 mt-20 flex items-start gap-2">
+                <Lock className="w-4 h-4 text-gray-600 dark:text-gray-300 animate-bounce" />
                 Change Password
-              </Button>
+              </div>
+              <div className="w-full max-w-sm flex flex-col items-end space-y-4">
+                {/* <div className="grid grid-cols-2 gap-4 text-gray-600  items-end"> */}
+                {/* Current Password */}
+                <div className="w-full">
+                  <Label
+                    htmlFor="old-password"
+                    className="text-gray-600 mb-2 block"
+                  >
+                    Current Password
+                  </Label>
+                  <Input
+                    required
+                    id="old-password"
+                    type={showOldPassword ? "text" : "password"}
+                    placeholder="Current password"
+                    className="bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                  />
+                  <div
+                    className="absolute right-3 top-[38px] cursor-pointer text-gray-400"
+                    onClick={() => setShowOldPassword((prev) => !prev)}
+                  >
+                    {showOldPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </div>
+                </div>
+
+                <div></div>
+
+                {/* New Password */}
+                <div className="w-full">
+                  <Label
+                    htmlFor="new-password"
+                    className="text-gray-600 mb-2 block"
+                  >
+                    New Password
+                  </Label>
+                  <Input
+                    required
+                    id="new-password"
+                    type={showNewPassword ? "text" : "password"}
+                    placeholder="New password"
+                    className="bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                  <div
+                    className="absolute right-3 top-[38px] cursor-pointer text-gray-400"
+                    onClick={() => setShowNewPassword((prev) => !prev)}
+                  >
+                    {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </div>
+                </div>
+
+                <div></div>
+
+                {/* Confirm New Password */}
+                <div className="w-full">
+                  <Label
+                    htmlFor="confirm-password"
+                    className="text-gray-600 mb-2 block"
+                  >
+                    Confirm New Password
+                  </Label>
+                  <Input
+                    required
+                    id="confirm-password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm password"
+                    className="bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  <div
+                    className="absolute right-3 top-[38px] cursor-pointer text-gray-400"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
+                  </div>
+                </div>
+
+                <div></div>
+
+                {/* Button spanning full width */}
+              </div>
+              <div className="md:col-span-2 flex justify-start items-end mt-6">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-800 font-medium transition-colors duration-200 rounded-md shadow-sm px-5 py-2"
+                  onClick={handleUpdatePassword}
+                >
+                  Change Password
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
     </div>

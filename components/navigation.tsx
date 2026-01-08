@@ -41,12 +41,14 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { createClient } from "@supabase/supabase-js";
 import LanguageSelector from "./language-selector";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Language } from "@/types/auction-types";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
+
 function Navigation({
   highlightSolutions = false,
 }: {
@@ -67,13 +69,14 @@ function Navigation({
     language: Language;
   }>({
     productName: "",
-    language: Languages[0], // default Language object
+    language: "en",
   });
   const router = useRouter();
-  // const searchParams = useSearchParams();
+
   const handleLanguageChange = (lang: Language) => {
     setFormData((prev) => ({ ...prev, language: lang }));
   };
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -141,30 +144,12 @@ function Navigation({
               description: "Private multiple bidding",
               icon: <Zap className="h-4 w-4 text-orange-600" />,
             },
-            // {
-            //   title: "Dutch Auction",
-            //   href: "/solutions/forward-auction/dutch",
-            //   description: "Descending price format",
-            //   icon: <ArrowDown className="h-4 w-4 text-orange-600" />,
-            // },
-            // {
-            //   title: "Silent Bid Auction",
-            //   href: "/solutions/forward-auction/sealed-bid",
-            //   description: "Private bidding process",
-            //   icon: <FileCheck className="h-4 w-4 text-purple-500" />,
-            // },
             {
               title: "Sealed Bid Auction",
               href: "/solutions/forward-auction/sealed-bid",
               description: "Private one-time bidding",
               icon: <FileCheck className="h-4 w-4 text-purple-500" />,
             },
-            // {
-            //   title: "Yankee Auction",
-            //   href: "/solutions/forward-auction/yankee",
-            //   description: "Multiple item lot bidding",
-            //   icon: <Zap className="h-4 w-4 text-indigo-500" />,
-            // },
           ],
         },
         {
@@ -191,18 +176,6 @@ function Navigation({
               description: "Comprehensive proposal requests",
               icon: <FileCheck className="h-4 w-4 text-blue-500" />,
             },
-            // {
-            //   title: "RFP (Request for Proposal)",
-            //   href: "/solutions/reverse-auction/rfp",
-            //   description: "Comprehensive proposal requests",
-            //   icon: <FileCheck className="h-4 w-4 text-brand-500" />,
-            // },
-            // {
-            //   title: "Supplier Bidding",
-            //   href: "/solutions/reverse-auction/supplier-bidding",
-            //   description: "Competitive supplier selection",
-            //   icon: <Award className="h-4 w-4 text-orange-600" />,
-            // },
           ],
         },
         {
@@ -213,35 +186,6 @@ function Navigation({
         },
       ],
     },
-    // {
-    //   title: "Get Started",
-    //   href: "/get-started", // <- NEW
-    //   external: false,
-    //   items: [
-    //     {
-    //       title: "On-Premise Installation",
-    //       href: "/get-started/on-premise",
-    //       description: "Deploy on your infrastructure",
-    //       icon: <Settings className="h-5 w-5 text-brand-500" />,
-    //     },
-    //     {
-    //       title: "Custom Development",
-    //       href: "/get-started/custom-development",
-    //       description: "Tailored solutions for your needs",
-    //       icon: <Code className="h-5 w-5 text-success" />,
-    //     },
-    //     {
-    //       title: "White Label Solution",
-    //       href: "/get-started/white-label",
-    //       description: "Branded platform for your business",
-    //       icon: (
-    //         <div className="w-5 h-5 bg-purple-500 rounded text-xs flex items-center justify-center text-white font-bold">
-    //           WL
-    //         </div>
-    //       ),
-    //     },
-    //   ],
-    // },
   ];
 
   const handleSectionClick = (href: string) => {
@@ -254,13 +198,6 @@ function Navigation({
   };
 
   const onDashboard = () => {
-    // const redirectTo = searchParams.get("redirect");
-
-    // if (redirectTo) {
-    //   router.push(redirectTo);
-    //   return;
-    // }
-
     if (user?.role === "both") {
       router.push("/dashboard");
     } else if (user?.role === "seller") {
@@ -271,6 +208,7 @@ function Navigation({
       router.push("/");
     }
   };
+
   useEffect(() => {
     const fetchProfile = async () => {
       if (!user?.id) return;
@@ -313,10 +251,13 @@ function Navigation({
                 priority
               />
               <div className="bg-[#313eba] text-white px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider whitespace-nowrap">
-                {!isAuthenticated ? "Auction" : 
-                 selectedMode === "forward" ? "Forward Auction" : 
-                 selectedMode === "reverse" ? "Reverse Auction" : 
-                 "Marketplace"}
+                {!isAuthenticated
+                  ? "Auction"
+                  : selectedMode === "forward"
+                  ? "Forward Auction"
+                  : selectedMode === "reverse"
+                  ? "Reverse Auction"
+                  : "Marketplace"}
               </div>
             </div>
           </Link>
@@ -330,38 +271,45 @@ function Navigation({
                   <Link
                     href="/"
                     className={cn(
-                      "group inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition-smooth",
-                      "text-neutral-700 hover:text-brand-500 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-brand-500 hover-lift",
-                      "dark:text-neutral-200 dark:hover:text-neutral-100 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800 dark:focus:text-neutral-100",
-                      isHomePage &&
-                        activeSection === "hero" &&
-                        "bg-neutral-100 text-brand-600 dark:bg-neutral-800 dark:text-brand-400"
+                      "group inline-flex h-9 w-max items-center justify-center rounded-md px-2 py-1.5 text-sm font-medium transition-smooth",
+                      "text-neutral-700 hover:text-brand-500 focus:text-brand-500 hover-lift",
+                      "dark:text-neutral-200 dark:hover:text-neutral-100 dark:focus:text-neutral-100"
                     )}
                   >
-                    <Home className="h-4 w-4 mr-2 transition-transform group-hover:scale-110 group-hover:rotate-3" />
-                    Home
+                    <Home className="h-4 w-4 transition-transform group-hover:scale-110 group-hover:rotate-3" />
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
+              {/* Dashboard Link (Icon Only) */}
+              {isAuthenticated && (
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={
+                        user?.role === "both"
+                          ? "/dashboard"
+                          : user?.role === "seller"
+                          ? "/dashboard/seller"
+                          : user?.role === "buyer"
+                          ? "/dashboard/buyer"
+                          : "/"
+                      }
+                      className={cn(
+                        "group inline-flex h-9 w-max items-center justify-center rounded-md px-2 py-1.5 text-sm font-medium transition-smooth",
+                        "text-neutral-700 hover:text-brand-500 focus:text-brand-500 hover-lift",
+                        "dark:text-neutral-200 dark:hover:text-neutral-100 dark:focus:text-neutral-100"
+                      )}
+                    >
+                      <LayoutDashboard className="h-4 w-4 transition-transform group-hover:scale-110 group-hover:rotate-3" />
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              )}
+
               {/* Detailed Navigation Items */}
               {detailedNavItems.map((item) => (
                 <NavigationMenuItem key={item.title}>
-                  {/* <NavigationMenuTrigger
-                    className={cn(
-                      "h-9 px-3 py-1.5 text-sm font-medium transition-all duration-200",
-                      "text-neutral-700 hover:text-brand-500 hover:bg-neutral-100",
-                      "dark:text-neutral-200 dark:hover:text-neutral-100 dark:hover:bg-neutral-800",
-                      "data-[state=open]:bg-neutral-100 data-[state=open]:text-brand-600",
-                      "dark:data-[state=open]:bg-neutral-800 dark:data-[state=open]:text-brand-400",
-                      "focus:bg-neutral-100 focus:text-brand-600",
-                      "dark:focus:bg-neutral-800 dark:focus:text-brand-400",
-                      "border-0 bg-transparent",
-                      highlightSolutions && item.title === "Solutions" && "bg-brand-500 text-white hover:bg-brand-600",
-                    )}
-                  >
-                    {item.title}
-                  </NavigationMenuTrigger> */}
                   <NavigationMenuTrigger>
                     <Link
                       href={item.href || "#"}
@@ -451,10 +399,10 @@ function Navigation({
                   <Link
                     href="/resources"
                     className={cn(
-                        "group inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition-smooth",
-                        "text-neutral-700 hover:text-brand-500 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-brand-500 hover-lift",
-                        "dark:text-neutral-200 dark:hover:text-neutral-100 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800 dark:focus:text-neutral-100"
-                      )}
+                      "group inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition-smooth",
+                      "text-neutral-700 hover:text-brand-500 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-brand-500 hover-lift",
+                      "dark:text-neutral-200 dark:hover:text-neutral-100 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800 dark:focus:text-neutral-100"
+                    )}
                   >
                     <FileText className="h-4 w-4 mr-2 transition-transform group-hover:scale-110 group-hover:rotate-3" />
                     Resources
@@ -466,13 +414,9 @@ function Navigation({
                 <NavigationMenuLink asChild>
                   <Link
                     href="/auctions"
-                    className={cn(
-                        "group inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition-smooth",
-                        "text-neutral-700 hover:text-brand-500 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-brand-500 hover-lift",
-                        "dark:text-neutral-200 dark:hover:text-neutral-100 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800 dark:focus:text-neutral-100"
-                      )}
+                    className="group inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1.5 text-sm font-light bg-[#313eba] text-white hover:bg-blue-700 transition-all duration-200 shadow-sm"
                   >
-                    <TvMinimalPlay className="hh-4 w-4 mr-2 text-blue-600 transition-transform group-hover:scale-110 group-hover:rotate-3" />
+                    <TvMinimalPlay className="h-4 w-4 mr-2 text-green-500 transition-transform group-hover:scale-110" />
                     Live Auction
                   </Link>
                 </NavigationMenuLink>
@@ -482,43 +426,47 @@ function Navigation({
                 <NavigationMenuLink asChild>
                   <Link
                     href="/buyNow"
-                    className={cn(
-                        "group inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium transition-smooth",
-                        "text-neutral-700 hover:text-brand-500 hover:bg-neutral-100 focus:bg-neutral-100 focus:text-brand-500 hover-lift",
-                        "dark:text-neutral-200 dark:hover:text-neutral-100 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800 dark:focus:text-neutral-100"
-                      )}
+                    className="group inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1.5 text-sm font-light bg-[#313eba] text-white hover:bg-blue-700 transition-all duration-200 shadow-sm"
                   >
-                    <span className="icon hh-4 w-4 mr-1 text-amber-500 transition-transform group-hover:scale-110 group-hover:rotate-3" aria-hidden="true">⚡</span>
-
+                    <span
+                      className="icon h-4 w-4 mr-1 text-white transition-transform group-hover:scale-110"
+                      aria-hidden="true"
+                    >
+                      ⚡
+                    </span>
                     Buy Now
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-
           {/* Right side actions */}
           <div className="flex items-center space-x-3">
             {isAuthenticated ? (
               <>
                 <div className="hidden md:flex items-center space-x-2">
-                  {/* User's first name */}
+                  <div className="mr-1 flex items-center gap-2">
+                    <ThemeToggle />
+                    <LanguageSelector
+                      value={formData.language}
+                      onChange={handleLanguageChange}
+                    />
+                  </div>
 
-               
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 hover:ring-2 hover:ring-gray-400 transition">
-                      <Image
-                        src={
-                          profile?.avatar_url
-                            ? `${profile.avatar_url}?t=${Date.now()}`
-                            : "/images/user.png"
-                        }
-                        alt={profile?.fname || "User"}
-                        width={32}
-                        height={32}
-                        className="w-full h-full object-cover rounded-full"
-                      />
-                    </div>
-               
+                  <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 hover:ring-2 hover:ring-gray-400 transition ml-2">
+                    <Image
+                      src={
+                        profile?.avatar_url
+                          ? `${profile.avatar_url}?t=${Date.now()}`
+                          : "/images/user.png"
+                      }
+                      alt={profile?.fname || "User"}
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  </div>
+
                   {profile?.fname && (
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       {profile.fname}
@@ -527,22 +475,8 @@ function Navigation({
 
                   <Button
                     variant="ghost"
-                    onClick={onDashboard}
-                    className="text-sm font-semibold text-gray-900 bg-gray-100 border border-gray-300 shadow-sm dark:text-gray-800 dark:bg-gray-200 dark:border-gray-700 flex items-center gap-2 px-3 py-2 rounded-md"
-                  >
-                    <LayoutDashboard className="w-4 h-4" />
-                    Dashboard
-                  </Button>
-                  <div className="mr-1">
-                    <LanguageSelector
-                      value={formData.language}
-                      onChange={handleLanguageChange}
-                    />
-                  </div>
-                  <Button
-                    variant="ghost"
                     onClick={logout}
-                    className="hidden md:inline-flex p-2 bg-blue-400 hover:bg-blue-600 text-white rounded-md shadow-md transition-all duration-200"
+                    className="hidden md:inline-flex p-2 bg-blue-400 hover:bg-blue-600 text-white rounded-md shadow-md transition-all duration-200 ml-2"
                     asChild
                   >
                     <Link href="/login">
@@ -553,6 +487,13 @@ function Navigation({
               </>
             ) : (
               <>
+                <div className="mr-1 flex items-center gap-2">
+                  <ThemeToggle />
+                  <LanguageSelector
+                    value={formData.language}
+                    onChange={handleLanguageChange}
+                  />
+                </div>
                 <Button
                   variant="ghost"
                   className="hidden md:inline-flex text-neutral-700 hover:text-brand-500 hover:bg-neutral-100 transition-all duration-200 dark:text-neutral-200 dark:hover:text-neutral-100 dark:hover:bg-neutral-800"
@@ -567,12 +508,6 @@ function Navigation({
                 >
                   <Link href="/register">Sign Up</Link>
                 </Button>
-                <div className="mr-1">
-                  <LanguageSelector
-                    value={formData.language}
-                    onChange={handleLanguageChange}
-                  />
-                </div>
               </>
             )}
             {/* Mobile menu */}
@@ -737,22 +672,6 @@ function Navigation({
                       </div>
                     </div>
                   </nav>
-
-                  {/* Mobile CTA */}
-                  {/* <div className="p-6 border-t border-neutral-200 dark:border-neutral-800">
-                    <Button
-                      className="w-full bg-brand-500 hover:bg-brand-600 text-white"
-                      asChild
-                    >
-                      <Link
-                        href="/get-started"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        Get Started
-                      </Link>
-                    </Button>
-                   
-                  </div> */}
                 </div>
               </SheetContent>
             </Sheet>

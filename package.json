@@ -49,6 +49,7 @@
     "cmdk": "1.0.4",
     "date-fns": "3.6.0",
     "embla-carousel-react": "8.5.1",
+    "framer-motion": "^12.24.10",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "luxon": "^3.7.1",
@@ -67,7 +68,6 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1"
   },
-  
   "devDependencies": {
     "@types/luxon": "^3.7.1",
     "@types/node": "18.19.3",
