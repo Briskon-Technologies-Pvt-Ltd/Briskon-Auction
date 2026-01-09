@@ -195,7 +195,7 @@ export const AuctionCard = ({
       }, 5000);
       return () => clearInterval(interval);
     }
-  }, [auction.productimages]); 
+  }, [auction.productimages]);
 
   const currentImage = useMemo(() => {
     return auction.productimages?.length
@@ -754,7 +754,8 @@ export default function AuctionsPage({
   excludeId?: string; // current auction id to exclude
   heading?: string;
 }) {
-  const { selectedMode } = useAuth();
+  const { selectedMode, user } = useAuth();
+  const isLoggedIn = !!user;
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedLocation, setSelectedLocation] = useState("all");
@@ -821,18 +822,36 @@ export default function AuctionsPage({
   );
   const auctiontypes = useMemo(() => {
     const base = [{ value: "all", label: "Auction Type" }];
-    if (selectedMode === "forward") {
-      return [...base, { value: "forward", label: `Forward Auctions (${liveTypeCounts.forward})` }];
+    if (isLoggedIn && selectedMode === "forward") {
+      return [
+        ...base,
+        {
+          value: "forward",
+          label: `Forward Auctions (${liveTypeCounts.forward})`,
+        },
+      ];
     }
-    if (selectedMode === "reverse") {
-      return [...base, { value: "reverse", label: `Reverse Auctions (${liveTypeCounts.reverse})` }];
+    if (isLoggedIn && selectedMode === "reverse") {
+      return [
+        ...base,
+        {
+          value: "reverse",
+          label: `Reverse Auctions (${liveTypeCounts.reverse})`,
+        },
+      ];
     }
     return [
       ...base,
-      { value: "forward", label: `Forward Auctions (${liveTypeCounts.forward})` },
-      { value: "reverse", label: `Reverse Auctions (${liveTypeCounts.reverse})` },
+      {
+        value: "forward",
+        label: `Forward Auctions (${liveTypeCounts.forward})`,
+      },
+      {
+        value: "reverse",
+        label: `Reverse Auctions (${liveTypeCounts.reverse})`,
+      },
     ];
-  }, [selectedMode, liveTypeCounts]);
+  }, [selectedMode, liveTypeCounts, isLoggedIn]);
 
   const locationCounts = allAuctionItems.reduce<Record<string, number>>(
     (acc, item) => {
@@ -1027,10 +1046,12 @@ export default function AuctionsPage({
     }
 
     // Filter by selectedMode from auth context
-    if (selectedMode === "forward") {
-      items = items.filter((item) => item.auctiontype === "forward");
-    } else if (selectedMode === "reverse") {
-      items = items.filter((item) => item.auctiontype === "reverse");
+    if (isLoggedIn) {
+      if (selectedMode === "forward") {
+        items = items.filter((item) => item.auctiontype === "forward");
+      } else if (selectedMode === "reverse") {
+        items = items.filter((item) => item.auctiontype === "reverse");
+      }
     }
 
     // Sorting logic
@@ -1218,14 +1239,14 @@ export default function AuctionsPage({
               </p>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-8">
-                {selectedMode !== "reverse" && (
+              <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto mb-8">
+                {(selectedMode !== "reverse" || !isLoggedIn) && (
                   <div
                     onClick={() => {
                       setTab("live");
                       setSelectedauctiontype("forward");
                     }}
-                    className={`text-center p-4 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden break-words shadow-sm
+                    className={`text-center p-4 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden break-words shadow-sm w-[calc(50%-1rem)] md:w-48
            ${
              tab === "live" && selectedauctiontype === "forward"
                ? "bg-blue-100 shadow-md ring-2 ring-blue-300"
@@ -1243,13 +1264,13 @@ export default function AuctionsPage({
                   </div>
                 )}
 
-                {selectedMode !== "forward" && (
+                {(selectedMode !== "forward" || !isLoggedIn) && (
                   <div
                     onClick={() => {
                       setTab("live"); // Switch to live tab
                       setSelectedauctiontype("reverse"); // Set filter
                     }}
-                    className={`text-center p-4 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden break-words shadow-sm ${
+                    className={`text-center p-4 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden break-words shadow-sm w-[calc(50%-1rem)] md:w-48 ${
                       tab === "live" && selectedauctiontype === "reverse"
                         ? "bg-blue-100 shadow-md ring-2 ring-blue-300"
                         : "bg-white"
@@ -1265,13 +1286,13 @@ export default function AuctionsPage({
                   </div>
                 )}
 
-                {selectedMode !== "reverse" && (
+                {(selectedMode !== "reverse" || !isLoggedIn) && (
                   <div
                     onClick={() => {
                       setTab("upcoming"); // Switch to upcoming tab
                       setSelectedauctiontype("forward"); // Set filter
                     }}
-                    className={`text-center p-4 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden break-words shadow-sm ${
+                    className={`text-center p-4 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden break-words shadow-sm w-[calc(50%-1rem)] md:w-48 ${
                       tab === "upcoming" && selectedauctiontype === "forward"
                         ? "bg-blue-100 shadow-md ring-2 ring-blue-300"
                         : "bg-white"
@@ -1287,13 +1308,13 @@ export default function AuctionsPage({
                   </div>
                 )}
 
-                {selectedMode !== "forward" && (
+                {(selectedMode !== "forward" || !isLoggedIn) && (
                   <div
                     onClick={() => {
                       setTab("upcoming"); // Switch to "Starting Soon" tab
                       setSelectedauctiontype("reverse"); // Set filter to reverse
                     }}
-                    className={`text-center p-4 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden break-words shadow-sm  ${
+                    className={`text-center p-4 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden break-words shadow-sm w-[calc(50%-1rem)] md:w-48  ${
                       tab === "upcoming" && selectedauctiontype === "reverse"
                         ? "bg-blue-100 shadow-md ring-2 ring-blue-300"
                         : "bg-white"

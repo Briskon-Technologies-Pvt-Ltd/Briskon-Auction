@@ -228,6 +228,14 @@ function Navigation({
     fetchProfile();
   }, [user]);
 
+  const logoSrc = !isAuthenticated
+    ? "/briskon-auction-logo.svg"
+    : selectedMode === "forward"
+    ? "/briskon-forward-auction-logo.svg"
+    : selectedMode === "reverse"
+    ? "/briskon-reverse-auction-logo.svg"
+    : "/briskon-auction-logo.svg";
+
   return (
     <header
       className={cn(
@@ -243,22 +251,13 @@ function Navigation({
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative flex items-center gap-3 overflow-hidden rounded-lg transition-transform duration-300 group-hover:scale-105">
               <Image
-                src="/briskon-logo.svg"
+                src={logoSrc}
                 alt="Auction Platform"
                 width={140}
                 height={40}
                 className="h-10 w-auto object-contain dark:brightness-0 dark:invert"
                 priority
               />
-              <div className="bg-[#313eba] text-white px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider whitespace-nowrap">
-                {!isAuthenticated
-                  ? "Auction"
-                  : selectedMode === "forward"
-                  ? "Forward Auction"
-                  : selectedMode === "reverse"
-                  ? "Reverse Auction"
-                  : "Marketplace"}
-              </div>
             </div>
           </Link>
 

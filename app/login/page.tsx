@@ -78,17 +78,17 @@ export default function LoginPage() {
       {/* Global Backdrop Layer - Blurred background spanning the whole screen */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2670&auto=format&fit=crop"
+          src="/ice.jpg"
           alt="App Background"
           className="w-full h-full object-cover opacity-60 grayscale-[0.1]"
         />
-        <div className="absolute inset-0 bg-blue-950/70 backdrop-blur-[8px]" />
+        <div className="absolute inset-0 bg-[#121951]/80" />
       </div>
 
       {/* Main Login Card - Centered Split Layout */}
       <div className="relative z-10 w-full max-w-[1440px] max-h-[calc(100vh-2rem)] bg-white rounded-[2rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col md:flex-row overflow-hidden border border-white/10 animate-in fade-in zoom-in duration-500">
         {/* Left Section - Image & Branding (Matching the reference image style) */}
-        <div className="w-full md:w-[45%] relative min-h-[240px] md:min-h-[500px] overflow-hidden flex flex-col justify-end p-6 lg:p-12">
+        <div className="w-full md:w-1/2 relative min-h-[240px] md:min-h-[500px] overflow-hidden flex flex-col justify-end p-6 lg:p-12">
           {/* Inner Image Layer (Unblurred mountain) */}
           <div className="absolute inset-0 z-0">
             <img
@@ -102,7 +102,7 @@ export default function LoginPage() {
 
           {/* Branding Content pinned to bottom-left */}
           <div className="relative z-10 space-y-4">
-            <h1 className="text-3xl md:text-4xl 2xl:text-5xl text-[#12195a] font-light tracking-[0.2em] drop-shadow-2xl">
+            <h1 className="text-3xl md:text-4xl 2xl:text-5xl text-[#12195a] font-normal tracking-[0.2em] drop-shadow-2xl">
               A-Z AUCTION
             </h1>
             <div className="flex flex-wrap gap-2 pt-4">
@@ -213,32 +213,54 @@ export default function LoginPage() {
               <div className="space-y-5">
                 {/* Email address field */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">
+                  <label className="text-sm font-medium text-black tracking-widest ml-1">
                     Email address
                   </label>
+
                   <div className="group relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                    {/* Black outline */}
+                    <div className="pointer-events-none absolute inset-0 rounded-[2rem] border border-black" />
+
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 transition-colors" />
+
                     <input
                       type="email"
                       required
-                      className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-100 rounded-[2rem] outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all text-sm font-medium"
+                      className="
+        w-full pl-12 pr-4 py-4
+        bg-white
+        rounded-[2rem]
+        outline-none
+        appearance-none
+        border-none
+        focus:outline-none
+        text-sm font-medium
+      "
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
                 </div>
-
                 {/* Password field */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">
+                  <label className="text-sm font-medium text-black tracking-widest ml-1">
                     Password
                   </label>
                   <div className="group relative">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                    {/* Black outline */}
+                    <div className="pointer-events-none absolute inset-0 rounded-[2rem] border border-black" />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 transition-colors" />
                     <input
                       type={showPassword ? "text" : "password"}
                       required
-                      className="w-full pl-12 pr-12 py-4 bg-gray-50 border border-gray-100 rounded-[2rem] outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all text-sm font-medium"
+                      className=" w-full pl-12 pr-4 py-4
+        bg-white
+        rounded-[2rem]
+        outline-none
+        appearance-none
+        border-none
+        focus:outline-none
+        text-sm font-medium"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
@@ -286,31 +308,31 @@ export default function LoginPage() {
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition-all"
                   />
-                  <span className="text-xs font-bold text-gray-400 group-hover:text-gray-600 transition-colors">
+                  <span className="text-xs font-normal text-gray-600 group-hover:text-gray-600 transition-colors">
                     Remember me
                   </span>
                 </label>
                 <a
                   href="#"
-                  className="text-[11px] font-bold text-[#313eba] hover:text-[#313eba]/80 tracking-tight"
+                  className="text-[11px] font-normal text-gray-600 hover:text-[#313eba]/80 tracking-tight"
                 >
                   Forgot password?
                 </a>
               </div>
             </form>
 
-            <div className="pt-8 text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+            <div className="pt-8 text-left text-[10px] font-normal tracking-widest">
               © 2026 Briskon ·{" "}
               <a
                 href="#"
-                className="hover:text-gray-600 transition-colors underline decoration-gray-300 underline-offset-2"
+                className="hover:text-gray-600 transition-colors underline  underline-offset-2"
               >
                 Privacy policy
               </a>{" "}
               ·{" "}
               <a
                 href="#"
-                className="hover:text-gray-600 transition-colors underline decoration-gray-300 underline-offset-2"
+                className="hover:text-gray-600 transition-colors underline  underline-offset-2"
               >
                 Terms and conditions
               </a>

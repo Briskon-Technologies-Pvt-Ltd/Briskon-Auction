@@ -88,7 +88,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
           <div className="flex flex-wrap gap-2 mb-4">
             <button
               onClick={() => setManageAuctionTab("live")}
-              className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+              className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm
         ${
           manageAuctionTab === "live"
             ? "bg-[#131eba] text-white shadow-md"
@@ -99,7 +99,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             </button>
             <button
               onClick={() => setManageAuctionTab("upcoming")}
-              className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+              className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
         ${
           manageAuctionTab === "upcoming"
             ? "bg-[#131eba] text-white shadow-md"
@@ -110,7 +110,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             </button>
             <button
               onClick={() => setManageAuctionTab("pending")}
-              className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+              className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
         ${
           manageAuctionTab === "pending"
             ? "bg-[#131eba] text-white shadow-md"
@@ -122,7 +122,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
 
             <button
               onClick={() => setManageAuctionTab("rejected")}
-              className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+              className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
         ${
           manageAuctionTab === "rejected"
             ? "bg-[#131eba] text-white shadow-md"
@@ -133,7 +133,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             </button>
             <button
               onClick={() => setManageAuctionTab("unsold")}
-              className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+              className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
         ${
           manageAuctionTab === "unsold"
             ? "bg-[#131eba] text-white shadow-md"
@@ -144,7 +144,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             </button>
             <button
               onClick={() => setManageAuctionTab("Evaluate")}
-              className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+              className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
         ${
           manageAuctionTab === "Evaluate"
             ? "bg-[#131eba] text-white shadow-md"
@@ -155,7 +155,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             </button>
             <button
               onClick={() => setManageAuctionTab("winners")}
-              className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+              className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
         ${
           manageAuctionTab === "winners"
             ? "bg-[#131eba] text-white shadow-md"

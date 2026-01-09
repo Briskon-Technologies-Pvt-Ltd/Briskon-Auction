@@ -95,7 +95,7 @@ export const BuyerReverseAuctionsView: React.FC<
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={() => setManageAuctionTab("live")}
-          className={`px-2 py-2 rounded-full font-light text-sm shadow-sm ${
+          className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
             manageAuctionTab === "live"
               ? "bg-[#131eba] text-white shadow-md"
               : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
@@ -106,7 +106,7 @@ export const BuyerReverseAuctionsView: React.FC<
 
         <button
           onClick={() => setManageAuctionTab("upcoming")}
-          className={`px-2 py-2 rounded-full font-light text-sm shadow-sm ${
+          className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
             manageAuctionTab === "upcoming"
               ? "bg-[#131eba] text-white shadow-md"
               : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
@@ -117,7 +117,7 @@ export const BuyerReverseAuctionsView: React.FC<
 
         <button
           onClick={() => setManageAuctionTab("pending")}
-          className={`px-2 py-2 rounded-full font-light text-sm shadow-sm ${
+          className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
             manageAuctionTab === "pending"
               ? "bg-[#131eba] text-white shadow-md"
               : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
@@ -128,7 +128,7 @@ export const BuyerReverseAuctionsView: React.FC<
 
         <button
           onClick={() => setManageAuctionTab("rejected")}
-          className={`px-2 py-2 rounded-full font-light text-sm shadow-sm ${
+          className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
             manageAuctionTab === "rejected"
               ? "bg-[#131eba] text-white shadow-md"
               : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
@@ -139,7 +139,7 @@ export const BuyerReverseAuctionsView: React.FC<
 
         <button
           onClick={() => setManageAuctionTab("closed")}
-          className={`px-2 py-2 rounded-full font-light text-sm shadow-sm ${
+          className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
             manageAuctionTab === "closed"
               ? "bg-[#131eba] text-white shadow-md"
               : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
@@ -150,7 +150,7 @@ export const BuyerReverseAuctionsView: React.FC<
 
         <button
           onClick={() => setManageAuctionTab("award")}
-          className={`px-2 py-2 rounded-full font-light text-sm shadow-sm ${
+          className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
             manageAuctionTab === "award"
               ? "bg-[#131eba] text-white shadow-md"
               : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
@@ -161,7 +161,7 @@ export const BuyerReverseAuctionsView: React.FC<
 
         <button
           onClick={() => setManageAuctionTab("contract")}
-          className={`px-2 py-2 rounded-full font-light text-sm shadow-sm ${
+          className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
             manageAuctionTab === "contract"
               ? "bg-[#131eba] text-white shadow-md"
               : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"

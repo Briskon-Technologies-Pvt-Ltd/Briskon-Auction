@@ -28,7 +28,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
         <div className="flex flex-wrap gap-2 mb-4">
           <button
             onClick={() => setManageAuctionReverseTab("active")}
-            className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
             ${
               manageAuctionReverseTab === "active"
                 ? "bg-[#131eba] text-white shadow-md"
@@ -40,7 +40,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
 
           <button
             onClick={() => setManageAuctionReverseTab("won")}
-            className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
             ${
               manageAuctionReverseTab === "won"
                 ? "bg-[#131eba] text-white shadow-md"
@@ -51,7 +51,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
           </button>
           <button
             onClick={() => setManageAuctionReverseTab("lost")}
-            className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
             ${
               manageAuctionReverseTab === "lost"
                 ? "bg-[#131eba] text-white shadow-md"

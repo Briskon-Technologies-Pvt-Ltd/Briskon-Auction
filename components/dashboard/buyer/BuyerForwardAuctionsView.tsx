@@ -55,13 +55,13 @@ export const BuyerForwardAuctionsView: React.FC<
   setSelectedAuctionId,
 }) => {
   return (
-    <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border shadow-md border-blue-300">
+    <div className="bg-white dark:bg-gray-900 p-4 rounded-[12px] border shadow-md border-blue-300">
       {/* Tab Navigation */}
       <div className="mb-4">
         <div className="flex flex-wrap gap-2 mb-3">
           <button
             onClick={() => setReverseManageAuctionTab("active")}
-            className={`px-3 py-2 rounded-full font-light text-sm shadow-sm ${
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
               reverseManageAuctionTab === "active"
                 ? "bg-[#131eba] text-white shadow-md"
                 : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
@@ -72,7 +72,7 @@ export const BuyerForwardAuctionsView: React.FC<
 
           <button
             onClick={() => setReverseManageAuctionTab("won")}
-            className={`px-3 py-2 rounded-full font-light text-sm shadow-sm ${
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
               reverseManageAuctionTab === "won"
                 ? "bg-[#131eba] text-white shadow-md"
                 : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
@@ -83,7 +83,7 @@ export const BuyerForwardAuctionsView: React.FC<
 
           <button
             onClick={() => setReverseManageAuctionTab("lost")}
-            className={`px-3 py-2 rounded-full font-light text-sm shadow-sm ${
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
               reverseManageAuctionTab === "lost"
                 ? "bg-[#131eba] text-white shadow-md"
                 : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
