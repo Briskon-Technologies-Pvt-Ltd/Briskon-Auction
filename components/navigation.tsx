@@ -12,9 +12,18 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Menu,
+  User,
   FileText,
   TrendingUp,
   Globe,
@@ -452,36 +461,53 @@ function Navigation({
                     />
                   </div>
 
-                  <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 hover:ring-2 hover:ring-gray-400 transition ml-2">
-                    <Image
-                      src={
-                        profile?.avatar_url
-                          ? `${profile.avatar_url}?t=${Date.now()}`
-                          : "/images/user.png"
-                      }
-                      alt={profile?.fname || "User"}
-                      width={32}
-                      height={32}
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  </div>
-
-                  {profile?.fname && (
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      {profile.fname}
-                    </span>
-                  )}
-
-                  <Button
-                    variant="ghost"
-                    onClick={logout}
-                    className="hidden md:inline-flex p-2 bg-blue-400 hover:bg-blue-600 text-white rounded-md shadow-md transition-all duration-200 ml-2"
-                    asChild
-                  >
-                    <Link href="/login">
-                      <LogIn className="w-5 h-5 text-white" />
-                    </Link>
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 hover:ring-2 hover:ring-gray-400 transition ml-2 cursor-pointer">
+                        <Image
+                          src={
+                            profile?.avatar_url
+                              ? `${profile.avatar_url}?t=${Date.now()}`
+                              : "/images/user.png"
+                          }
+                          alt={profile?.fname || "User"}
+                          width={32}
+                          height={32}
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuLabel>
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium leading-none">
+                            {profile?.fname}
+                          </p>
+                          <p className="text-xs leading-none text-muted-foreground">
+                            {user?.email}
+                          </p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link
+                          href="/settings/profile"
+                          className="cursor-pointer"
+                        >
+                          <User className="mr-2 h-4 w-4" />
+                          <span>View Profile</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={logout}
+                        className="cursor-pointer text-red-600 focus:text-red-600"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Log Out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </>
             ) : (

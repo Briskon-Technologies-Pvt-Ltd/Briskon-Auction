@@ -15,7 +15,7 @@ import { createClient } from "@supabase/supabase-js";
 import LocationSelector from "@/components/LocationSelector";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Eye, EyeOff, User, Lock } from "lucide-react";
+import { Eye, EyeOff, User, Lock, Mail } from "lucide-react";
 import type { Country } from "@/lib/locationTypes";
 import { countriesData } from "@/Data/Location";
 // import useSWR from "swr";
@@ -293,52 +293,53 @@ export default function ProfileSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen dark:bg-gray-900 py-4 ">
-      <div className="grid grid-cols-[4fr_3fr] md:grid-cols-2 shadow-md bg-white gap-10 rounded-lg  p-10 divide-x divide-gray-300 border border-gray-300">
-        {/* Header */}
-        <div className="pr-6">
-          <div className="flex items-center justify-between">
-            {/* Name */}
-            <div className="flex flex-col -mt-[100px]">
-              <div className="font-medium text-[30px] text-gray-800 dark:text-white mt-2">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-10 px-4 md:px-8">
+      <div className="max-w-4xl mx-auto pt-8">
+        {/* Page Header */}
+        {/* <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Account
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Real-time information and activities of your property.
+          </p>
+        </div> */}
+
+        <div className="bg-white dark:bg-gray-900 shadow-lg rounded-xl border border-gray-200 dark:border-gray-800 p-6 md:p-8 space-y-10">
+          {/* Profile Picture Section */}
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="relative w-24 h-24 shrink-0">
+              <Image
+                src={
+                  profile.avatar_url
+                    ? `${profile.avatar_url}?t=${Date.now()}`
+                    : "/images/user.png"
+                }
+                alt="Profile"
+                fill
+                className="object-cover rounded-full border-2 border-gray-100 dark:border-gray-800"
+              />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {fname} {lname}
-              </div>
-              {/* Email, Role, Joined */}
-              <div className="flex flex-wrap gap-x-1 gap-y-2 mt-1 text-xs text-gray-500 dark:text-gray-300">
-                <div>
-                  {profile?.type
-                    ? profile.type.charAt(0).toUpperCase() +
-                      profile.type.slice(1)
-                    : "N/A"}
-                </div>
-                <div>
-                  <div className="font-normal capitalize">
-                    {profile.role} -{" "}
-                  </div>
-                </div>
-                <div>
-                  <div className="font-normal">{profile.email},</div>
-                </div>
-                <div>
-                  <div className="font-normal">Joined on: {createdAtIST}</div>
-                </div>
+              </h3>
+              <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+                <span>
+                  {formData.organizationName ||
+                    (profile.type === "individual"
+                      ? "Individual Account"
+                      : "Organization")}
+                </span>
+                <span className="hidden md:inline">•</span>
+                <span className="capitalize">{profile.role}</span>
+                <span className="hidden md:inline">•</span>
+                <span>{user?.email}</span>
+                <span className="hidden md:inline">•</span>
+                <span>Joined {createdAtIST}</span>
               </div>
             </div>
-            {/* Image + Change Photo button */}
-            <div className="flex flex-col items-center gap-2 ">
-              <div className="w-24 h-24 rounded-full overflow-hidden border-4 relative">
-                <Image
-                  src={
-                    profile.avatar_url
-                      ? `${profile.avatar_url}?t=${Date.now()}`
-                      : "/images/user.png"
-                  }
-                  alt="Profile"
-                  width={128}
-                  height={128}
-                  className="object-cover w-full h-full"
-                />
-              </div>
+            <div className="flex items-center gap-3">
               <label className="cursor-pointer">
                 <input
                   ref={fileInputRef}
@@ -349,127 +350,122 @@ export default function ProfileSettingsPage() {
                 />
                 <Button
                   type="button"
-                  variant="secondary"
+                  variant="outline"
                   size="sm"
                   onClick={triggerFileInput}
-                  className="bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-800 font-medium transition-colors duration-200 rounded-md shadow-md px-5 py-2"
+                  className="font-medium bg-white hover:bg-gray-50 text-gray-700 border-gray-300"
                 >
-                  Change Photo
+                  Upload new picture
                 </Button>
               </label>
+              {/* <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                Delete
+              </Button> */}
             </div>
           </div>
 
-          {/* Read-only Info */}
-          <div className="flex flex-col md:flex-row justify-between gap-6 mt-4">
-            {/* Left Side: Info Fields */}
-            <div className="flex-1 space-y-2 text-sm text-gray-700 dark:text-white">
-              {/* <div className="flex flex-col items-center md:items-end gap-2 shrink-0">
-            <div className="w-28 h-28 rounded-full overflow-hidden border-4 relative">
-              <Image
-                src={
-                  profile.avatar_url
-                    ? `${profile.avatar_url}?t=${Date.now()}`
-                    : "/images/user.png"
-                }
-                alt="Profile"
-                width={128}
-                height={128}
-                className="object-cover w-full h-full"
-              />
-            </div>
-            <label className="cursor-pointer">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
+          <hr className="border-gray-200 dark:border-gray-800" />
+
+          {/* Personal Information */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Personal Information
+              </h3>
               <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={triggerFileInput}
-                className="bg-gray-200 text-gray-800 hover:bg-gray-300 hover:text-black transition-colors duration-200"
+                onClick={handleSaveChanges}
+                className="bg-[#131eba] hover:bg-[#0e1690] text-white"
               >
-                Change Photo
+                Save Changes
               </Button>
-            </label>
-          </div> */}
+            </div>
 
-              {/* Fname, Lname */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 -mt-2">
-                <div>
-                  <Label htmlFor="fname" className="text-gray-600 mb-2 block">
-                    First Name
-                  </Label>
-                  <Input
-                    id="fname"
-                    className=" bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
-                    placeholder="Enter First Name"
-                    value={fname}
-                    onChange={(e) => setFname(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="lname" className="text-gray-600 mb-2 block">
-                    Last Name
-                  </Label>
-                  <Input
-                    id="lname"
-                    className="  bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
-                    placeholder="Enter Last Name"
-                    value={lname}
-                    onChange={(e) => setLname(e.target.value)}
-                  />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="fname"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  First name
+                </Label>
+                <Input
+                  id="fname"
+                  value={fname}
+                  onChange={(e) => setFname(e.target.value)}
+                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                />
               </div>
-
-              {/* Address1, Phone */}
-              <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <Label
-                    htmlFor="addressline1"
-                    className="text-gray-600 mb-2 block"
-                  >
-                    Address Line 1
-                  </Label>
-                  <Input
-                    id="addressline1"
-                    className=" bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
-                    placeholder="Eg: Florida"
-                    value={address1}
-                    onChange={(e) => setAddress1(e.target.value)}
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <Label
-                    htmlFor="addressline2"
-                    className="text-gray-600 mb-2 block"
-                  >
-                    Address Line 2
-                  </Label>
-                  <Input
-                    id="addressline2"
-                    className=" bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
-                    placeholder="Optional"
-                    value={address2}
-                    onChange={(e) => setAddress2(e.target.value)}
-                  />
-                </div>
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="lname"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Last name
+                </Label>
+                <Input
+                  id="lname"
+                  value={lname}
+                  onChange={(e) => setLname(e.target.value)}
+                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                />
               </div>
-              {/* City, State, Country - in one row */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="phone"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Phone
+                </Label>
+                <Input
+                  id="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                />
+              </div>
+              <div className="space-y-1.5">
+                {/* Empty placeholder or additional field */}
+              </div>
+              <div className="col-span-2 md:col-span-1 space-y-1.5">
+                <Label
+                  htmlFor="address1"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Address Line 1
+                </Label>
+                <Input
+                  id="address1"
+                  value={address1}
+                  onChange={(e) => setAddress1(e.target.value)}
+                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                />
+              </div>
+              <div className="col-span-2 md:col-span-1 space-y-1.5">
+                <Label
+                  htmlFor="address2"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Address Line 2
+                </Label>
+                <Input
+                  id="address2"
+                  value={address2}
+                  onChange={(e) => setAddress2(e.target.value)}
+                  placeholder="Optional"
+                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                />
+              </div>
+              <div className="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-1.5">
-                  <Label htmlFor="country" className="text-gray-600">
+                  <Label
+                    htmlFor="country"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
                     Country
                   </Label>
                   <select
                     id="country"
-                    name="country"
-                    className="w-full bg-white  border-gray-300 text-gray-500 transition-all focus:border-blue-500 focus:bg-white shadow-sm rounded-lg p-2"
+                    className="w-full h-10 px-3 bg-white rounded-xl border border-gray-200 shadow-sm text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:cursor-not-allowed disabled:opacity-50"
                     value={formData.country}
                     onChange={(e) => {
                       const value = e.target.value;
@@ -484,9 +480,7 @@ export default function ProfileSettingsPage() {
                       setSelectedCity("");
                     }}
                   >
-                    <option className="text-gray-600" value="">
-                      Select Country
-                    </option>
+                    <option value="">Select Country</option>
                     {countries.map((country) => (
                       <option key={country.id} value={country.name}>
                         {country.name}
@@ -494,26 +488,24 @@ export default function ProfileSettingsPage() {
                     ))}
                   </select>
                 </div>
-
                 <div className="space-y-1.5">
-                  <label htmlFor="state" className="text-gray-600">
+                  <Label
+                    htmlFor="state"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
                     State
-                  </label>
+                  </Label>
                   <select
                     id="state"
-                    className="w-full border border-gray-300 focus:border-blue-500 focus:bg-white transition-all shadow-sm  rounded-lg p-2"
+                    className="w-full h-10 px-3 bg-white rounded-xl border border-gray-200 shadow-sm text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:cursor-not-allowed disabled:opacity-50"
                     value={selectedState}
                     onChange={(e) => {
                       const value = e.target.value;
-
-                      // Update formData with selected state, reset city
-                      setFormData((prevFormData) => ({
-                        ...prevFormData,
+                      setFormData((prev) => ({
+                        ...prev,
                         state: value,
-                        city: "", // Reset city when state changes
+                        city: "",
                       }));
-
-                      // Update selected state and reset city
                       setSelectedState(value);
                       setSelectedCity("");
                     }}
@@ -528,161 +520,158 @@ export default function ProfileSettingsPage() {
                       ))}
                   </select>
                 </div>
-
                 <div className="space-y-1.5">
-                  <label htmlFor="city" className="text-gray-600">
+                  <Label
+                    htmlFor="city"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
                     City
-                  </label>
+                  </Label>
                   <select
                     id="city"
-                    className="w-full border border-gray-300 focus:border-blue-500 focus:bg-white transition-all shadow-sm  rounded-lg p-2"
+                    className="w-full h-10 px-3 bg-white rounded-xl border border-gray-200 shadow-sm text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:cursor-not-allowed disabled:opacity-50"
                     value={selectedCity}
                     onChange={(e) => {
                       const value = e.target.value;
-
-                      setFormData((prev) => ({
-                        ...prev,
-                        city: value,
-                      }));
-
+                      setFormData((prev) => ({ ...prev, city: value }));
                       setSelectedCity(value);
                     }}
                   >
-                    <option className="" value="">
-                      Select City
-                    </option>
+                    <option value="">Select City</option>
                     {countries
                       .find((country) => country.name === selectedCountry)
                       ?.states.find((state) => state.name === selectedState)
                       ?.cities?.map((city) => (
-                        <option className="" key={city.id} value={city.name}>
+                        <option key={city.id} value={city.name}>
                           {city.name}
                         </option>
                       ))}
                   </select>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                {/* Phone input (half width) */}
-                <div className="col-span-1">
-                  <Label htmlFor="phone" className="text-gray-600 mb-2 block">
-                    Phone
-                  </Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    className="bg-white border border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
-                    placeholder="Phone number"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                </div>
+          <hr className="border-gray-200 dark:border-gray-800" />
 
-                {/* Put another field here to use the second column, or leave empty */}
-                <div className="col-span-1">
-                  {/* Optional: second input or leave blank */}
-                </div>
+          {/* Contact Email */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Contact email
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                Manage your accounts email address for the invoices.
+              </p>
+            </div>
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <Input
+                  value={user?.email || ""}
+                  readOnly
+                  disabled
+                  className="pl-10 bg-gray-50 text-gray-500 rounded-xl border-gray-200 shadow-sm"
+                />
+              </div>
+              <div className="w-auto">
+                {/* Placeholder for alignment if needed, or remove if no content */}
               </div>
             </div>
           </div>
 
-          {/* Save Button */}
-          <div className="md:col-span-2 text-center flex justify-start mt-6">
-            <Button
-              size="sm"
-              variant="secondary"
-              className="bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-800 font-medium transition-colors duration-200 rounded-md shadow-sm px-5 py-2"
-              onClick={handleSaveChanges}
-            >
-              Update Profile
-            </Button>
-          </div>
-        </div>
-        {/* Editable Form Section */}
-        <div className="pl-6">
-          <div className="flex flex-col items-end z-10">
-            <div className="w-full max-w-sm">
-              <div className="text-xl font-semibold text-gray-800 dark:text-white pb-2 mb-3 mt-20 flex items-start gap-2">
-                <Lock className="w-4 h-4 text-gray-600 dark:text-gray-300 animate-bounce" />
-                Change Password
+          <hr className="border-gray-200 dark:border-gray-800" />
+
+          {/* Password */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Password
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  Modify your current password.
+                </p>
               </div>
-              <div className="w-full max-w-sm flex flex-col items-end space-y-4">
-                {/* <div className="grid grid-cols-2 gap-4 text-gray-600  items-end"> */}
-                {/* Current Password */}
-                <div className="w-full">
-                  <Label
-                    htmlFor="old-password"
-                    className="text-gray-600 mb-2 block"
-                  >
-                    Current Password
-                  </Label>
+              <Button
+                onClick={handleUpdatePassword}
+                variant="outline"
+                className="hover:bg-gray-50 rounded-lg"
+              >
+                Change Password
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-1.5 relative">
+                <Label
+                  htmlFor="old-password"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Current password
+                </Label>
+                <div className="relative">
                   <Input
-                    required
                     id="old-password"
                     type={showOldPassword ? "text" : "password"}
-                    placeholder="Current password"
-                    className="bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
+                    className="bg-white pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                   />
                   <div
-                    className="absolute right-3 top-[38px] cursor-pointer text-gray-400"
-                    onClick={() => setShowOldPassword((prev) => !prev)}
+                    className="absolute right-3 top-2.5 cursor-pointer text-gray-400"
+                    onClick={() => setShowOldPassword(!showOldPassword)}
                   >
                     {showOldPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </div>
                 </div>
+              </div>
+              <div className="space-y-1.5 md:col-start-2">
+                {/* spacer if needed for layout match */}
+              </div>
 
-                <div></div>
-
-                {/* New Password */}
-                <div className="w-full">
-                  <Label
-                    htmlFor="new-password"
-                    className="text-gray-600 mb-2 block"
-                  >
-                    New Password
-                  </Label>
+              <div className="space-y-1.5 relative">
+                <Label
+                  htmlFor="new-password"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  New password
+                </Label>
+                <div className="relative">
                   <Input
-                    required
                     id="new-password"
                     type={showNewPassword ? "text" : "password"}
-                    placeholder="New password"
-                    className="bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
+                    className="bg-white pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                   />
                   <div
-                    className="absolute right-3 top-[38px] cursor-pointer text-gray-400"
-                    onClick={() => setShowNewPassword((prev) => !prev)}
+                    className="absolute right-3 top-2.5 cursor-pointer text-gray-400"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
                   >
                     {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </div>
                 </div>
+              </div>
 
-                <div></div>
-
-                {/* Confirm New Password */}
-                <div className="w-full">
-                  <Label
-                    htmlFor="confirm-password"
-                    className="text-gray-600 mb-2 block"
-                  >
-                    Confirm New Password
-                  </Label>
+              <div className="space-y-1.5 relative">
+                <Label
+                  htmlFor="confirm-password"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Confirm new password
+                </Label>
+                <div className="relative">
                   <Input
-                    required
                     id="confirm-password"
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm password"
-                    className="bg-white border-gray-300 text-gray-500 placeholder-gray-400 shadow-sm focus:border-blue-500 focus:bg-white transition-all rounded-lg"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="bg-white pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                   />
                   <div
-                    className="absolute right-3 top-[38px] cursor-pointer text-gray-400"
-                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute right-3 top-2.5 cursor-pointer text-gray-400"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
                       <EyeOff size={18} />
@@ -691,20 +680,6 @@ export default function ProfileSettingsPage() {
                     )}
                   </div>
                 </div>
-
-                <div></div>
-
-                {/* Button spanning full width */}
-              </div>
-              <div className="md:col-span-2 flex justify-start items-end mt-6">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-800 font-medium transition-colors duration-200 rounded-md shadow-sm px-5 py-2"
-                  onClick={handleUpdatePassword}
-                >
-                  Change Password
-                </Button>
               </div>
             </div>
           </div>

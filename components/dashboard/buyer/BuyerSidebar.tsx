@@ -144,40 +144,6 @@ export const BuyerSidebar: React.FC<BuyerSidebarProps> = ({
           </p>
         </div>
       </div>
-
-      {/* My Profile Card - Always visible */}
-      <div
-        onClick={() => onSelectSection("profile")}
-        className={`cursor-pointer transition-all p-5 rounded-2xl border ${
-          selectedSection === "profile"
-            ? "bg-[#131eba] text-white border border-[#131eba]"
-            : "bg-white text-gray-900 border-blue-300 hover:border-blue-200 hover:shadow-md"
-        }`}
-      >
-        <div className="flex items-center gap-2 mb-5">
-          <Settings
-            className={`h-6 w-6 ${
-              selectedSection === "profile" ? "text-white" : "text-orange-400"
-            }`}
-          />
-          <span className="text-sm font-bold uppercase tracking-wider">
-            My Profile
-          </span>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="w-[50px]">
-            <User className="h-10 w-10 opacity-50" />
-          </div>
-          <p
-            className={`text-[11px] leading-tight font-medium ${
-              selectedSection === "profile" ? "text-blue-100" : "text-gray-500"
-            }`}
-          >
-            Edit Profile &<br />
-            Change Password
-          </p>
-        </div>
-      </div>
     </div>
   );
 };
