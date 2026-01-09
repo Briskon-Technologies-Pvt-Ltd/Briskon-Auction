@@ -59,7 +59,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
         <div className="flex flex-wrap gap-2 mb-4">
           <button
             onClick={() => setBuyNowTab("live")}
-            className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
             ${
               buyNowTab === "live"
                 ? "bg-[#131eba] text-white shadow-md"
@@ -70,7 +70,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
           </button>
           <button
             onClick={() => setBuyNowTab("approval")}
-            className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
             ${
               buyNowTab === "approval"
                 ? "bg-[#131eba] text-white shadow-md"
@@ -81,7 +81,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
           </button>
           <button
             onClick={() => setBuyNowTab("rejected")}
-            className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
             ${
               buyNowTab === "rejected"
                 ? "bg-[#131eba] text-white shadow-md"
@@ -92,7 +92,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
           </button>
           <button
             onClick={() => setBuyNowTab("upcoming")}
-            className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
             ${
               buyNowTab === "upcoming"
                 ? "bg-[#131eba] text-white shadow-md"
@@ -103,7 +103,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
           </button>
           <button
             onClick={() => setBuyNowTab("Sold")}
-            className={`px-2 py-2 rounded-full font-light text-sm shadow-sm 
+            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
             ${
               buyNowTab === "Sold"
                 ? "bg-[#131eba] text-white shadow-md"
@@ -116,7 +116,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
 
         {buyNowTab === "live" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Zap className="h-5 w-5 text-orange-500 animate-bounce" />
                 Buy Now Products
@@ -131,7 +131,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
             {liveProducts.length === 0 ? (
               <p className="text-sm text-gray-500">No Live items</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -198,7 +198,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
 
         {buyNowTab === "upcoming" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Calendar className="h-4 w-4 animate-bounce" />
                 Upcoming
@@ -213,7 +213,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
             {upcomingProducts.length === 0 ? (
               <p className="text-sm text-gray-500">No Products</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -309,7 +309,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
 
         {buyNowTab === "approval" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Hourglass className="h-4 w-4 text-yellow-500 animate-bounce" />
                 Pending Approval
@@ -324,7 +324,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
             {pendingProducts.length === 0 ? (
               <p className="text-sm text-gray-500">No Pending Products</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -412,7 +412,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
 
         {buyNowTab === "rejected" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <XCircle className="h-4 w-4 text-red-500 animate-bounce" />
                 Rejected Product
@@ -427,7 +427,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
             {rejectedProducts.length === 0 ? (
               <p className="text-sm text-gray-500">No Rejected Products</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -496,7 +496,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
 
         {buyNowTab === "Sold" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <PackageCheck className="h-5 w-5 text-blue-500 animate-bounce" />
                 Sold items
@@ -505,7 +505,7 @@ export const BuyNowProductsView: React.FC<BuyNowProductsViewProps> = ({
             {soldProducts.length === 0 ? (
               <p className="text-sm text-gray-500">No sold items yet.</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>

@@ -57,7 +57,7 @@ export const BuyerForwardAuctionsView: React.FC<
   return (
     <div className="bg-white dark:bg-gray-900 p-4 rounded-[12px] border shadow-md border-blue-300">
       {/* Tab Navigation */}
-      <div className="mb-4">
+      <div className="mb-4 pt-2">
         <div className="flex flex-wrap gap-2 mb-3">
           <button
             onClick={() => setReverseManageAuctionTab("active")}
@@ -68,17 +68,6 @@ export const BuyerForwardAuctionsView: React.FC<
             }`}
           >
             Active Bids ({activeBids.length})
-          </button>
-
-          <button
-            onClick={() => setReverseManageAuctionTab("won")}
-            className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
-              reverseManageAuctionTab === "won"
-                ? "bg-[#131eba] text-white shadow-md"
-                : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
-            }`}
-          >
-            Won Auctions ({wonAuctions.length})
           </button>
 
           <button
@@ -97,7 +86,7 @@ export const BuyerForwardAuctionsView: React.FC<
       {/* Active Bids Content */}
       {reverseManageAuctionTab === "active" && (
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 pt-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Gavel className="h-4 w-4 text-violet-500 animate-bounce" />
               Auctions I’m Bidding On
@@ -106,7 +95,7 @@ export const BuyerForwardAuctionsView: React.FC<
           {activeBids.length === 0 ? (
             <p className="text-sm text-gray-500">No Auctions.</p>
           ) : (
-            <div className="overflow-x-auto rounded-md mt-6">
+            <div className="overflow-x-auto rounded-md mt-6 pb-12">
               <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                 <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                   <tr>
@@ -171,84 +160,6 @@ export const BuyerForwardAuctionsView: React.FC<
                           startTime={active.scheduledstart}
                           duration={active.auctionduration}
                         />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Won Auctions Content */}
-      {reverseManageAuctionTab === "won" && (
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Trophy className="h-4 w-4 text-yellow-500 animate-bounce" />
-              Auctions I Won
-            </h2>
-          </div>
-          {wonAuctions.length === 0 ? (
-            <p className="text-sm text-gray-500">No won auctions yet.</p>
-          ) : (
-            <div className="overflow-x-auto rounded-md mt-6">
-              <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
-                <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
-                  <tr>
-                    <th className="px-4 py-2 text-left">Auction Name</th>
-                    <th className="px-4 py-2 text-left">Format</th>
-                    <th className="px-4 py-2 text-left">Category</th>
-                    <th className="px-4 py-2 text-left">Seller Name</th>
-                    <th className="px-4 py-2 text-left">Starting Bid</th>
-                    <th className="px-4 py-2 text-left">My Bid Amount</th>
-                    <th className="px-4 py-2 text-left">End Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {wonAuctions.map((auction, idx) => (
-                    <tr
-                      key={idx}
-                      className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                    >
-                      <td className="p-2">
-                        <Link
-                          href={`/auctions/${auction.auctionId}`}
-                          className="flex items-center gap-2 text-gray-700 dark:text-gray-100 hover:underline"
-                        >
-                          <img
-                            src={auction.productimage}
-                            alt={auction.productName}
-                            className="w-6 h-6 rounded-full object-cover"
-                          />
-                          {auction.productName}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-2 text-gray-600 capitalize">
-                        {auction.auctionsubtype}
-                      </td>
-                      <td className="px-4 py-2 text-gray-600 capitalize">
-                        {auction.category?.handle || "N/A"}
-                      </td>
-                      <td className="px-4 py-2 text-gray-600">
-                        {auction.sellerName}
-                      </td>
-                      <td className="px-4 py-2 text-gray-600">
-                        ${auction.startAmount?.toLocaleString("en-IN") || "N/A"}
-                      </td>
-                      <td className="px-4 py-2 font-bold text-green-600">
-                        $
-                        {auction.winningBidAmount?.toLocaleString("en-IN") ||
-                          "N/A"}
-                      </td>
-                      <td className="px-4 py-2 text-gray-600">
-                        {formatDateTime(
-                          getEndDate(
-                            new Date(auction.scheduledstart),
-                            auction.auctionduration ?? {}
-                          )
-                        )}
                       </td>
                     </tr>
                   ))}

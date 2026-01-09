@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useUser } from "@supabase/auth-helpers-react";
+// import { useUser as useSupabaseUser } from "@supabase/auth-helpers-react";
 import { useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import LocationSelector from "@/components/LocationSelector";
@@ -41,6 +41,8 @@ interface Profile {
 
 export default function ProfileSettingsPage() {
   const { user } = useAuth();
+  // const supabaseUser = useSupabaseUser(); // Removed missing dependency
+  const [rawUser, setRawUser] = useState<any>(null);
 
   const params = useParams<{ id: string }>();
   const router = useRouter();
@@ -93,6 +95,15 @@ export default function ProfileSettingsPage() {
 
   useEffect(() => {
     setCountries(countriesData); // Only set once on mount
+
+    // Fetch raw user for metadata
+    const getRawUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        setRawUser(data.user);
+      }
+    };
+    getRawUser();
   }, []);
 
   useEffect(() => {
@@ -261,7 +272,7 @@ export default function ProfileSettingsPage() {
     }, 1000); // delay 1 second
   };
 
-  const handleSaveChanges = async () => {
+  const handleUpdateProfile = async () => {
     if (!user?.id) {
       toast.error("User not logged in");
       return;
@@ -294,121 +305,104 @@ export default function ProfileSettingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-10 px-4 md:px-8">
-      <div className="max-w-4xl mx-auto pt-8">
-        {/* Page Header */}
-        {/* <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Account
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Real-time information and activities of your property.
-          </p>
-        </div> */}
-
-        <div className="bg-white dark:bg-gray-900 shadow-lg rounded-xl border border-gray-200 dark:border-gray-800 p-6 md:p-8 space-y-10">
-          {/* Profile Picture Section */}
-          <div className="flex flex-col md:flex-row items-center gap-6">
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Profile Header Card */}
+        <div className="bg-white dark:bg-gray-900 shadow-sm rounded-xl mt-6 border border-gray-200 dark:border-gray-800 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col md:flex-row items-center gap-6 w-full">
             <div className="relative w-24 h-24 shrink-0">
               <Image
-                src={
-                  profile.avatar_url
-                    ? `${profile.avatar_url}?t=${Date.now()}`
-                    : "/images/user.png"
-                }
+                src={profile.avatar_url || "/placeholder-user.jpg"}
                 alt="Profile"
                 fill
-                className="object-cover rounded-full border-2 border-gray-100 dark:border-gray-800"
+                className="object-cover rounded-full border-4 border-white shadow-md"
               />
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {fname} {lname}
-              </h3>
-              <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
-                <span>
-                  {formData.organizationName ||
-                    (profile.type === "individual"
-                      ? "Individual Account"
-                      : "Organization")}
-                </span>
-                <span className="hidden md:inline">•</span>
-                <span className="capitalize">{profile.role}</span>
-                <span className="hidden md:inline">•</span>
-                <span>{user?.email}</span>
-                <span className="hidden md:inline">•</span>
-                <span>Joined {createdAtIST}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <label className="cursor-pointer">
+              <label
+                htmlFor="avatar-upload"
+                className="absolute bottom-0 right-0 bg-white p-1.5 rounded-full shadow-lg cursor-pointer hover:bg-gray-50 border border-gray-100 transition-transform hover:scale-105"
+              >
+                <User size={16} className="text-gray-600" />
                 <input
-                  ref={fileInputRef}
+                  id="avatar-upload"
                   type="file"
                   accept="image/*"
-                  onChange={handleFileChange}
                   className="hidden"
+                  onChange={handleFileChange}
+                  disabled={loading}
                 />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={triggerFileInput}
-                  className="font-medium bg-white hover:bg-gray-50 text-gray-700 border-gray-300"
-                >
-                  Upload new picture
-                </Button>
               </label>
-              {/* <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-                Delete
-              </Button> */}
+            </div>
+
+            <div className="text-center md:text-left space-y-1">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                {fname} {lname}
+              </h2>
+              <div className="flex flex-col text-sm text-gray-500 gap-1">
+                <p>
+                  Organization:{" "}
+                  {rawUser?.user_metadata?.organization || "Seller"} •{" "}
+                  {user?.email}
+                </p>
+                <p>Joined {createdAtIST}</p>
+              </div>
             </div>
           </div>
 
-          <hr className="border-gray-200 dark:border-gray-800" />
+          <div className="shrink-0">
+            <label htmlFor="avatar-upload">
+              <Button
+                className="shadow-sm bg-[#313eba] hover:bg-[#2b35a3] text-white"
+                disabled={loading}
+                asChild
+              >
+                <span>{loading ? "Uploading..." : "Upload new picture"}</span>
+              </Button>
+            </label>
+          </div>
+        </div>
 
-          {/* Personal Information */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column: Personal Information */}
+          <div className="lg:col-span-2 bg-white dark:bg-gray-900 shadow-sm rounded-xl border border-gray-200 dark:border-gray-800 p-6 md:p-8">
+            <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Personal Information
               </h3>
-              <Button
-                onClick={handleSaveChanges}
-                className="bg-[#131eba] hover:bg-[#0e1690] text-white"
-              >
-                Save Changes
-              </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-1.5">
-                <Label
-                  htmlFor="fname"
-                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  First name
-                </Label>
-                <Input
-                  id="fname"
-                  value={fname}
-                  onChange={(e) => setFname(e.target.value)}
-                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                />
+            <div className="space-y-6">
+              {/* Name Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="fname"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    First name
+                  </Label>
+                  <Input
+                    id="fname"
+                    value={fname}
+                    onChange={(e) => setFname(e.target.value)}
+                    className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all py-5"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="lname"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Last name
+                  </Label>
+                  <Input
+                    id="lname"
+                    value={lname}
+                    onChange={(e) => setLname(e.target.value)}
+                    className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all py-5"
+                  />
+                </div>
               </div>
-              <div className="space-y-1.5">
-                <Label
-                  htmlFor="lname"
-                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  Last name
-                </Label>
-                <Input
-                  id="lname"
-                  value={lname}
-                  onChange={(e) => setLname(e.target.value)}
-                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                />
-              </div>
+
+              {/* Phone Row */}
               <div className="space-y-1.5">
                 <Label
                   htmlFor="phone"
@@ -420,13 +414,12 @@ export default function ProfileSettingsPage() {
                   id="phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all py-5"
                 />
               </div>
+
+              {/* Address 1 Row */}
               <div className="space-y-1.5">
-                {/* Empty placeholder or additional field */}
-              </div>
-              <div className="col-span-2 md:col-span-1 space-y-1.5">
                 <Label
                   htmlFor="address1"
                   className="text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -437,25 +430,13 @@ export default function ProfileSettingsPage() {
                   id="address1"
                   value={address1}
                   onChange={(e) => setAddress1(e.target.value)}
-                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                />
-              </div>
-              <div className="col-span-2 md:col-span-1 space-y-1.5">
-                <Label
-                  htmlFor="address2"
-                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  Address Line 2
-                </Label>
-                <Input
-                  id="address2"
-                  value={address2}
-                  onChange={(e) => setAddress2(e.target.value)}
                   placeholder="Optional"
-                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all py-5"
                 />
               </div>
-              <div className="col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+              {/* Country & Address 2 Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="country"
@@ -465,7 +446,7 @@ export default function ProfileSettingsPage() {
                   </Label>
                   <select
                     id="country"
-                    className="w-full h-10 px-3 bg-white rounded-xl border border-gray-200 shadow-sm text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full h-[46px] px-3 bg-white rounded-xl border border-gray-200 shadow-sm text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:cursor-not-allowed disabled:opacity-50"
                     value={formData.country}
                     onChange={(e) => {
                       const value = e.target.value;
@@ -490,6 +471,25 @@ export default function ProfileSettingsPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label
+                    htmlFor="address2"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Address Line 2
+                  </Label>
+                  <Input
+                    id="address2"
+                    value={address2}
+                    onChange={(e) => setAddress2(e.target.value)}
+                    placeholder="Optional"
+                    className="bg-white rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all py-5"
+                  />
+                </div>
+              </div>
+
+              {/* State & City Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-1.5">
+                  <Label
                     htmlFor="state"
                     className="text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
@@ -497,7 +497,7 @@ export default function ProfileSettingsPage() {
                   </Label>
                   <select
                     id="state"
-                    className="w-full h-10 px-3 bg-white rounded-xl border border-gray-200 shadow-sm text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full h-[46px] px-3 bg-white rounded-xl border border-gray-200 shadow-sm text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:cursor-not-allowed disabled:opacity-50"
                     value={selectedState}
                     onChange={(e) => {
                       const value = e.target.value;
@@ -529,7 +529,7 @@ export default function ProfileSettingsPage() {
                   </Label>
                   <select
                     id="city"
-                    className="w-full h-10 px-3 bg-white rounded-xl border border-gray-200 shadow-sm text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full h-[46px] px-3 bg-white rounded-xl border border-gray-200 shadow-sm text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:cursor-not-allowed disabled:opacity-50"
                     value={selectedCity}
                     onChange={(e) => {
                       const value = e.target.value;
@@ -549,60 +549,29 @@ export default function ProfileSettingsPage() {
                   </select>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <hr className="border-gray-200 dark:border-gray-800" />
-
-          {/* Contact Email */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                Contact email
-              </h3>
-              <p className="text-sm text-gray-500 mt-1">
-                Manage your accounts email address for the invoices.
-              </p>
-            </div>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                <Input
-                  value={user?.email || ""}
-                  readOnly
-                  disabled
-                  className="pl-10 bg-gray-50 text-gray-500 rounded-xl border-gray-200 shadow-sm"
-                />
-              </div>
-              <div className="w-auto">
-                {/* Placeholder for alignment if needed, or remove if no content */}
+              {/* Save Button aligned right */}
+              <div className="flex justify-end pt-4">
+                <Button
+                  onClick={handleUpdateProfile}
+                  disabled={loading}
+                  className="bg-[#313eba] hover:bg-[#2b35a3] text-white rounded-xl px-6"
+                >
+                  {loading ? "Saving..." : "Save Changes"}
+                </Button>
               </div>
             </div>
           </div>
 
-          <hr className="border-gray-200 dark:border-gray-800" />
-
-          {/* Password */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
+          {/* Right Column: Password */}
+          <div className="lg:col-span-1 bg-white dark:bg-gray-900 shadow-sm rounded-xl border border-gray-200 dark:border-gray-800 p-6 md:p-8 flex flex-col justify-between">
+            <div className="space-y-6">
+              <div className="mb-2">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Password
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">
-                  Modify your current password.
-                </p>
               </div>
-              <Button
-                onClick={handleUpdatePassword}
-                variant="outline"
-                className="hover:bg-gray-50 rounded-lg"
-              >
-                Change Password
-              </Button>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1.5 relative">
                 <Label
                   htmlFor="old-password"
@@ -616,18 +585,15 @@ export default function ProfileSettingsPage() {
                     type={showOldPassword ? "text" : "password"}
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
-                    className="bg-white pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="bg-white pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all py-5"
                   />
                   <div
-                    className="absolute right-3 top-2.5 cursor-pointer text-gray-400"
+                    className="absolute right-3 top-3 cursor-pointer text-gray-400"
                     onClick={() => setShowOldPassword(!showOldPassword)}
                   >
                     {showOldPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </div>
                 </div>
-              </div>
-              <div className="space-y-1.5 md:col-start-2">
-                {/* spacer if needed for layout match */}
               </div>
 
               <div className="space-y-1.5 relative">
@@ -643,10 +609,10 @@ export default function ProfileSettingsPage() {
                     type={showNewPassword ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="bg-white pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="bg-white pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all py-5"
                   />
                   <div
-                    className="absolute right-3 top-2.5 cursor-pointer text-gray-400"
+                    className="absolute right-3 top-3 cursor-pointer text-gray-400"
                     onClick={() => setShowNewPassword(!showNewPassword)}
                   >
                     {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -667,10 +633,10 @@ export default function ProfileSettingsPage() {
                     type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="bg-white pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className="bg-white pr-10 rounded-xl border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all py-5"
                   />
                   <div
-                    className="absolute right-3 top-2.5 cursor-pointer text-gray-400"
+                    className="absolute right-3 top-3 cursor-pointer text-gray-400"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -681,6 +647,15 @@ export default function ProfileSettingsPage() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div className="mt-8">
+              <Button
+                onClick={handleUpdatePassword}
+                className="w-full rounded-xl py-5 bg-[#313eba] hover:bg-[#2b35a3] text-white shadow-sm"
+              >
+                Change Password
+              </Button>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ export const BuyerBuyNowView: React.FC<BuyerBuyNowViewProps> = ({
 }) => {
   return (
     <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow border border-blue-300">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 pt-4">
         <h2 className="text-lg font-semibold flex items-center gap-2">
           <ShoppingCart className="h-5 w-5 text-green-500 animate-bounce" />
           Buy Now Products I've Purchased
@@ -21,7 +21,7 @@ export const BuyerBuyNowView: React.FC<BuyerBuyNowViewProps> = ({
       {purchases.length === 0 ? (
         <p className="text-sm text-gray-500">No buy now products purchased</p>
       ) : (
-        <div className="overflow-x-auto rounded-md mt-6">
+        <div className="overflow-x-auto rounded-md mt-6 pb-12">
           <table className="min-w-full text-sm border border-gray-100 dark:border-gray-800">
             <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
               <tr>

@@ -57,6 +57,7 @@ import { BuyerSidebar } from "@/components/dashboard/buyer/BuyerSidebar";
 import { BuyerReverseAuctionsView } from "@/components/dashboard/buyer/BuyerReverseAuctionsView";
 import { BuyerForwardAuctionsView } from "@/components/dashboard/buyer/BuyerForwardAuctionsView";
 import { BuyerBuyNowView } from "@/components/dashboard/buyer/BuyerBuyNowView";
+import { BuyerWonAuctionsView } from "@/components/dashboard/buyer/BuyerWonAuctionsView";
 type Bid = {
   id: string;
   auction_name: string;
@@ -375,153 +376,106 @@ export default function BuyerDashboard() {
       return "";
     }
   }
-  // Consolidated initial data fetching - runs all requests in parallel
+  // Independent data fetching for waterfall/streaming effect
   useEffect(() => {
     if (!user?.id || !user?.email) return;
 
-    const fetchAllDashboardData = async () => {
-      setIsLoadingBids(true);
+    const email = encodeURIComponent(user.email);
+    const userId = encodeURIComponent(user.id);
+
+    // Helper to handle independent fetches
+    const fetchData = async (
+      url: string,
+      setter: (data: any) => void,
+      statsKey?: keyof typeof stats
+    ) => {
       try {
-        // Run all API calls in parallel for faster loading
-        const [
-          activeBidsRes,
-          wonAuctionsRes,
-          lostAuctionsRes,
-          closedAuctionsRes,
-          awardedAuctionsRes,
-          approvalPendingRes,
-          approvalRejectedRes,
-          liveAuctionsRes,
-          upcomingAuctionsRes,
-          purchasesRes,
-          manageAuctionRes,
-        ] = await Promise.all([
-          fetch(`/api/buyer/active-bids?id=${user.id}&email=${user.email}`),
-          fetch(
-            `/api/buyer/won-auctions?email=${encodeURIComponent(
-              user.email
-            )}&id=${encodeURIComponent(user.id)}`
-          ),
-          fetch(
-            `/api/buyer/lost-auctions?email=${encodeURIComponent(
-              user.email
-            )}&id=${encodeURIComponent(user.id)}`
-          ),
-          fetch(
-            `/api/buyer/closed-auctions?email=${encodeURIComponent(user.email)}`
-          ),
-          fetch(
-            `/api/buyer/awarded-auctions?email=${encodeURIComponent(
-              user.email
-            )}`,
-            { method: "GET" }
-          ),
-          fetch(
-            `/api/buyer/approval-Pending?email=${encodeURIComponent(
-              user.email
-            )}`
-          ),
-          fetch(
-            `/api/buyer/approval-rejected?email=${encodeURIComponent(
-              user.email
-            )}`
-          ),
-          fetch(
-            `/api/buyer/live-auctions?email=${encodeURIComponent(user.email)}`
-          ),
-          fetch(
-            `/api/buyer/upcoming-auctions?email=${encodeURIComponent(
-              user.email
-            )}`
-          ),
-          fetch(`/api/buynow/purchased?id=${user.id}`),
-          fetch(
-            `/api/buyer/manage-auction?email=${encodeURIComponent(user.email)}`
-          ),
-        ]);
+        const res = await fetch(url);
+        const data = await res.json();
 
-        // Process all responses in parallel
-        const [
-          activeBidsData,
-          wonAuctionsData,
-          lostAuctionsData,
-          closedAuctionsData,
-          awardedAuctionsData,
-          approvalPendingData,
-          approvalRejectedData,
-          liveAuctionsData,
-          upcomingAuctionsData,
-          purchasesData,
-          manageAuctionData,
-        ] = await Promise.all([
-          activeBidsRes.json(),
-          wonAuctionsRes.json(),
-          lostAuctionsRes.json(),
-          closedAuctionsRes.json(),
-          awardedAuctionsRes.json(),
-          approvalPendingRes.json(),
-          approvalRejectedRes.json(),
-          liveAuctionsRes.json(),
-          upcomingAuctionsRes.json(),
-          purchasesRes.json(),
-          manageAuctionRes.json(),
-        ]);
-
-        // Update all state at once to minimize re-renders
-        setActiveBids(activeBidsData || []);
-        setWonAuctions(wonAuctionsData || []);
-        setLostAuctions(lostAuctionsData || []);
-        setClosedAuctions(
-          closedAuctionsData?.success ? closedAuctionsData.data || [] : []
-        );
-        setAwardedAuctions(
-          Array.isArray(awardedAuctionsData) ? awardedAuctionsData : []
-        );
-        setApprovalPendings(
-          approvalPendingData?.success ? approvalPendingData.data || [] : []
-        );
-        setApprovalRejected(
-          approvalRejectedData?.success ? approvalRejectedData.data || [] : []
-        );
-        setLiveAuctions(
-          liveAuctionsData?.success ? liveAuctionsData.data || [] : []
-        );
-        setUpcomingAuctions(
-          upcomingAuctionsData?.success ? upcomingAuctionsData.data || [] : []
-        );
-        setPurchases(purchasesData?.success ? purchasesData.data || [] : []);
-
-        if (manageAuctionData?.success) {
-          setAuctionCount(manageAuctionData.count);
+        let valueToSet = data;
+        // Handle { success: true, data: [...] } structure
+        if (data && typeof data === "object" && "data" in data) {
+          valueToSet = data.data;
         }
 
-        // Calculate live count from liveAuctions instead of a separate fetch
-        if (liveAuctionsData?.success) {
-          setLiveCount(liveAuctionsData.data?.length || 0);
-        }
+        setter(Array.isArray(valueToSet) ? valueToSet : []);
 
-        // Update stats in a single operation
-        setStats({
-          activeBids: Array.isArray(activeBidsData) ? activeBidsData.length : 0,
-          wonAuctions: Array.isArray(wonAuctionsData)
-            ? wonAuctionsData.length
-            : 0,
-          lostAuctions: Array.isArray(lostAuctionsData)
-            ? lostAuctionsData.length
-            : 0,
-          totalSpend: 0,
-          recentActivities: [],
-        });
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-        setError(error instanceof Error ? error.message : "Unknown error");
-      } finally {
-        setIsLoadingBids(false);
-        setLoading(false);
+        if (statsKey) {
+          setStats((prev) => ({
+            ...prev,
+            [statsKey]: Array.isArray(valueToSet) ? valueToSet.length : 0,
+          }));
+        }
+      } catch (err) {
+        console.error(`Error fetching ${url}:`, err);
       }
     };
 
-    fetchAllDashboardData();
+    setIsLoadingBids(true);
+
+    // Fire off all requests independently
+    fetchData(
+      `/api/buyer/active-bids?id=${userId}&email=${email}`,
+      setActiveBids,
+      "activeBids"
+    );
+    fetchData(
+      `/api/buyer/won-auctions?email=${email}&id=${userId}`,
+      setWonAuctions,
+      "wonAuctions"
+    );
+    fetchData(
+      `/api/buyer/lost-auctions?email=${email}&id=${userId}`,
+      setLostAuctions,
+      "lostAuctions"
+    );
+
+    fetchData(`/api/buyer/closed-auctions?email=${email}`, (data) =>
+      setClosedAuctions(data)
+    );
+    fetchData(`/api/buyer/awarded-auctions?email=${email}`, setAwardedAuctions);
+    fetchData(
+      `/api/buyer/approval-Pending?email=${email}`,
+      setApprovalPendings
+    );
+    fetchData(
+      `/api/buyer/approval-rejected?email=${email}`,
+      setApprovalRejected
+    );
+
+    // Live auctions - also update liveCount
+    fetch(`/api/buyer/live-auctions?email=${email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const list = data?.success ? data.data : [];
+        setLiveAuctions(list || []);
+        setLiveCount(list?.length || 0);
+      })
+      .catch((err) => console.error("Error fetching live-auctions:", err));
+
+    fetchData(
+      `/api/buyer/upcoming-auctions?email=${email}`,
+      setUpcomingAuctions
+    );
+    fetchData(`/api/buynow/purchased?id=${user.id}`, setPurchases);
+
+    // Manage Auction Count
+    fetch(`/api/buyer/manage-auction?email=${email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success) {
+          setAuctionCount(data.count);
+        }
+      })
+      .catch((err) => console.error("Error fetching manage-auction:", err));
+
+    // We don't strictly need to wait for all to finish to "stop loading"
+    // because we want data to pop in. But we can set loading to false immediately
+    // or after a short timeout if we want to show generic skeleton.
+    // For "pop-in" effect, simply done:
+    setIsLoadingBids(false);
+    setLoading(false);
   }, [user?.id, user?.email]);
 
   // Lazy load details only when section changes
@@ -641,9 +595,8 @@ export default function BuyerDashboard() {
             onSelectSection={setSelectedSection}
             onSelectReverseTab={setManageAuctionTab}
             onSelectForwardTab={setReverseManageAuctionTab}
-            forwardAuctionCount={
-              activeBids.length + wonAuctions.length + lostAuctions.length
-            }
+            activeForwardAuctionCount={activeBids.length + lostAuctions.length}
+            wonAuctionCount={wonAuctions.length}
             reverseAuctionCount={auctionCount}
             buyNowCount={purchases.length}
           />
@@ -669,6 +622,11 @@ export default function BuyerDashboard() {
                 setShowSellerLeaderboard={setShowSellerLeaderboard}
                 setSelectedAuctionId={setSelectedAuctionId}
               />
+            )}
+
+            {/* Won Auctions View */}
+            {selectedSection === "wonAuctions" && (
+              <BuyerWonAuctionsView wonAuctions={wonAuctions} />
             )}
 
             {/* Reverse Auctions */}

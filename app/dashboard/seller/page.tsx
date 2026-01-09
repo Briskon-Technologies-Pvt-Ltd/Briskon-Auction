@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import { SellerSoldItemsView } from "@/components/dashboard/seller/SellerSoldItemsView";
 import { SellerSidebar } from "@/components/dashboard/seller/SellerSidebar";
 import { ForwardAuctionsView } from "@/components/dashboard/seller/ForwardAuctionsView";
 import { ReverseAuctionsView } from "@/components/dashboard/seller/ReverseAuctionsView";
@@ -106,155 +107,134 @@ export default function SellerDashboard() {
     }
   }, [selectedMode, isLoading]);
 
-  // Consolidated Data Fetching - runs all requests in parallel
+  // Independent Data Fetching for Waterfall Effect
   useEffect(() => {
     if (!user?.email || isLoading) return;
 
     const email = user.email;
     const userId = user.id;
 
-    const fetchAllDashboardData = async () => {
+    const fetchData = async (
+      url: string,
+      setter: (data: any) => void,
+      countSetter?: (count: number) => void
+    ) => {
       try {
-        // Step 1: Fire all fetch requests in parallel
-        const fetchPromises = [
-          // Forward Data
-          fetch(
-            `/api/seller/live-auctions?email=${encodeURIComponent(
-              email
-            )}&sale_type=1`
-          ),
-          fetch(
-            `/api/seller/upcoming-auctions?email=${encodeURIComponent(
-              email
-            )}&sale_type=1`
-          ),
-          fetch(
-            `/api/seller/evaluate-auction?email=${encodeURIComponent(email)}`
-          ),
-          fetch(
-            `/api/seller/approval-Pending?email=${encodeURIComponent(
-              email
-            )}&sale_type=1`
-          ),
-          fetch(
-            `/api/seller/approval-rejected?email=${encodeURIComponent(
-              email
-            )}&sale_type=1`
-          ),
-          fetch(`/api/seller/unsold-items?email=${encodeURIComponent(email)}`),
-          fetch(`/api/seller/sales-history?email=${encodeURIComponent(email)}`),
-          fetch(
-            `/api/seller/manage-auction?email=${encodeURIComponent(email)}`
-          ),
+        const res = await fetch(url);
+        const data = await res.json();
 
-          // Reverse Data
-          fetch(
-            `/api/seller/active-bids?id=${userId}&email=${encodeURIComponent(
-              email
-            )}`
-          ),
-          fetch(
-            `/api/seller/lost-auctions?id=${userId}&email=${encodeURIComponent(
-              email
-            )}`
-          ),
-          fetch(
-            `/api/seller/awarded-auctions?email=${encodeURIComponent(email)}`
-          ),
-
-          // Buy Now Data
-          fetch(
-            `/api/seller/live-auctions?email=${encodeURIComponent(
-              email
-            )}&sale_type=2`
-          ),
-          fetch(
-            `/api/seller/upcoming-auctions?email=${encodeURIComponent(
-              email
-            )}&sale_type=2`
-          ),
-          fetch(
-            `/api/seller/approval-Pending?email=${encodeURIComponent(
-              email
-            )}&sale_type=2`
-          ),
-          fetch(
-            `/api/seller/approval-rejected?email=${encodeURIComponent(
-              email
-            )}&sale_type=2`
-          ),
-          fetch(`/api/seller/sold-buy-now?email=${encodeURIComponent(email)}`),
-        ];
-
-        const responses = await Promise.all(fetchPromises);
-
-        // Step 2: Parse all JSON responses in parallel (True parallelism)
-        const dataPromises = responses.map((res) => res.json());
-        const [
-          liveData,
-          upcomingData,
-          evaluateData,
-          pendingData,
-          rejectedData,
-          unsoldData,
-          salesData,
-          manageData,
-          activeData,
-          lostData,
-          awardedData,
-          liveBuyNowData,
-          upcomingBuyNowData,
-          pendingBuyNowData,
-          rejectedBuyNowData,
-          soldBuyNowData,
-        ] = await Promise.all(dataPromises);
-
-        // Step 3: Update all state in one batch to minimize re-renders
-        // Forward State
-        if (liveData.success) {
-          setLiveAuctions(liveData.data || []);
-          setLiveCount(liveData.count || 0);
+        let valueToSet = data;
+        if (data && typeof data === "object" && "data" in data) {
+          valueToSet = data.data;
         }
-        if (upcomingData.success) {
-          setUpcomingAuctions(upcomingData.data || []);
-          setUpcomingCount(upcomingData.count || 0);
-        }
-        if (evaluateData.success) setEvaluateAuctions(evaluateData.data || []);
-        if (pendingData.success) setApprovalPendings(pendingData.data || []);
-        if (rejectedData.success) setApprovalRejected(rejectedData.data || []);
-        if (unsoldData.success) {
-          setUnsoldSales(unsoldData.data || []);
-          setUnsoldCount((unsoldData.data || []).length);
-        }
-        if (salesData.success) setSales(salesData.data || []);
-        if (manageData.success) setAuctions(manageData.data || []);
 
-        // Reverse State
-        if (activeData.success) setActiveBids(activeData.data || []);
-        if (lostData.success) setLostBids(lostData.data || []);
-        if (Array.isArray(awardedData)) setAwardedAuctions(awardedData);
-        else if (awardedData.success && Array.isArray(awardedData.data))
-          setAwardedAuctions(awardedData.data);
+        const list = Array.isArray(valueToSet) ? valueToSet : [];
+        setter(list);
 
-        // Buy Now State
-        if (liveBuyNowData.success) {
-          setBuyNowProducts(liveBuyNowData.data || []);
-          setBuyNowCount(liveBuyNowData.count || 0);
+        // Use provided count setter or fallback to list length if count is in data
+        if (countSetter) {
+          const count =
+            data && typeof data === "object" && "count" in data
+              ? data.count
+              : list.length;
+          countSetter(count);
         }
-        if (upcomingBuyNowData.success)
-          setUpcomingBuyNow(upcomingBuyNowData.data || []);
-        if (pendingBuyNowData.success)
-          setApprovalPendingsBuynow(pendingBuyNowData.data || []);
-        if (rejectedBuyNowData.success)
-          setRejectedBuyNow(rejectedBuyNowData.data || []);
-        if (soldBuyNowData.success) setSoldBuyNow(soldBuyNowData.data || []);
       } catch (err) {
-        console.error("Error fetching Dashboard Data:", err);
-        setError("Failed to load dashboard data. Please try again later.");
+        console.error(`Error fetching ${url}:`, err);
       }
     };
 
-    fetchAllDashboardData();
+    // Forward Data
+    fetchData(
+      `/api/seller/live-auctions?email=${encodeURIComponent(
+        email
+      )}&sale_type=1`,
+      setLiveAuctions,
+      setLiveCount
+    );
+    fetchData(
+      `/api/seller/upcoming-auctions?email=${encodeURIComponent(
+        email
+      )}&sale_type=1`,
+      setUpcomingAuctions,
+      setUpcomingCount
+    );
+    fetchData(
+      `/api/seller/evaluate-auction?email=${encodeURIComponent(email)}`,
+      setEvaluateAuctions
+    );
+    fetchData(
+      `/api/seller/approval-Pending?email=${encodeURIComponent(
+        email
+      )}&sale_type=1`,
+      setApprovalPendings
+    );
+    fetchData(
+      `/api/seller/approval-rejected?email=${encodeURIComponent(
+        email
+      )}&sale_type=1`,
+      setApprovalRejected
+    );
+    fetchData(
+      `/api/seller/unsold-items?email=${encodeURIComponent(email)}`,
+      setUnsoldSales,
+      setUnsoldCount
+    );
+    fetchData(
+      `/api/seller/sales-history?email=${encodeURIComponent(email)}`,
+      setSales
+    );
+    fetchData(
+      `/api/seller/manage-auction?email=${encodeURIComponent(email)}`,
+      setAuctions
+    );
+
+    // Reverse Data
+    fetchData(
+      `/api/seller/active-bids?id=${userId}&email=${encodeURIComponent(email)}`,
+      setActiveBids
+    );
+    fetchData(
+      `/api/seller/lost-auctions?id=${userId}&email=${encodeURIComponent(
+        email
+      )}`,
+      setLostBids
+    );
+    fetchData(
+      `/api/seller/awarded-auctions?email=${encodeURIComponent(email)}`,
+      setAwardedAuctions
+    );
+
+    // Buy Now Data
+    fetchData(
+      `/api/seller/live-auctions?email=${encodeURIComponent(
+        email
+      )}&sale_type=2`,
+      setBuyNowProducts,
+      setBuyNowCount
+    );
+    fetchData(
+      `/api/seller/upcoming-auctions?email=${encodeURIComponent(
+        email
+      )}&sale_type=2`,
+      setUpcomingBuyNow
+    );
+    fetchData(
+      `/api/seller/approval-Pending?email=${encodeURIComponent(
+        email
+      )}&sale_type=2`,
+      setApprovalPendingsBuynow
+    );
+    fetchData(
+      `/api/seller/approval-rejected?email=${encodeURIComponent(
+        email
+      )}&sale_type=2`,
+      setRejectedBuyNow
+    );
+    fetchData(
+      `/api/seller/sold-buy-now?email=${encodeURIComponent(email)}`,
+      setSoldBuyNow
+    );
   }, [user?.email, user?.id, isLoading]);
 
   // --- Render ---
@@ -296,18 +276,32 @@ export default function SellerDashboard() {
             onSelectSection={setSelectedSection}
             onSelectManageAuctionTab={setManageAuctionTab}
             onSelectBuyNowTab={setBuyNowTab}
-            forwardAuctionCount={liveCount + unsoldCount + sales.length}
-            reverseAuctionCount={
-              activeBids.length + awardedAuctions.length + lostBids.length
+            forwardAuctionCount={
+              liveAuctions.length +
+              upcomingAuctions.length +
+              unsoldSales.length +
+              approvalPendings.length +
+              approvalRejected.length +
+              evaluateAuctions.length
             }
-            buyNowCount={buyNowCount}
+            buyNowCount={buyNowProducts.length}
+            reverseAuctionCount={activeBids.length}
+            soldItemsCount={sales.length}
           />
 
           <div className="flex-1 min-w-0">
             {selectedMode !== "forward" && selectedMode !== "reverse" && (
               <div className="">{/* Select a mode to view dashboard */}</div>
             )}
+            {/* Seller Sold Items View */}
+            {selectedSection === "soldItems" && (
+              <SellerSoldItemsView
+                sales={sales}
+                setSelectedSection={setSelectedSection}
+              />
+            )}
 
+            {/* Forward Autions View */}
             {selectedSection === "manageAuction" && (
               <ForwardAuctionsView
                 manageAuctionTab={manageAuctionTab}

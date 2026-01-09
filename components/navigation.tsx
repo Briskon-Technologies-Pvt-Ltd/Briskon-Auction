@@ -262,9 +262,9 @@ function Navigation({
               <Image
                 src={logoSrc}
                 alt="Auction Platform"
-                width={140}
-                height={40}
-                className="h-10 w-auto object-contain dark:brightness-0 dark:invert"
+                width={120}
+                height={32}
+                className="h-8 w-auto object-contain dark:brightness-0 dark:invert"
                 priority
               />
             </div>
@@ -430,22 +430,24 @@ function Navigation({
                 </NavigationMenuLink>
               </NavigationMenuItem>
               {/* buy now */}
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href="/buyNow"
-                    className="group inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1.5 text-sm font-light bg-[#313eba] text-white hover:bg-blue-700 transition-all duration-200 shadow-sm"
-                  >
-                    <span
-                      className="icon h-4 w-4 mr-1 text-white transition-transform group-hover:scale-110"
-                      aria-hidden="true"
+              {selectedMode !== "forward" && selectedMode !== "reverse" && (
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href="/buyNow"
+                      className="group inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1.5 text-sm font-light bg-[#313eba] text-white hover:bg-blue-700 transition-all duration-200 shadow-sm"
                     >
-                      ⚡
-                    </span>
-                    Buy Now
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
+                      <span
+                        className="icon h-4 w-4 mr-1 text-white transition-transform group-hover:scale-110"
+                        aria-hidden="true"
+                      >
+                        ⚡
+                      </span>
+                      Buy Now
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              )}
             </NavigationMenuList>
           </NavigationMenu>
           {/* Right side actions */}

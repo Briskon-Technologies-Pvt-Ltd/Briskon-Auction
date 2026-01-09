@@ -25,7 +25,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
   return (
     <div>
       <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow">
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-4 pt-4">
           <button
             onClick={() => setManageAuctionReverseTab("active")}
             className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
@@ -64,7 +64,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
 
         {manageAuctionReverseTab === "active" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Gavel className="h-5 w-5 text-violet-500 animate-bounce" />
                 Auctions I’m Bidding On
@@ -73,7 +73,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
             {activeBids.length === 0 ? (
               <p className="text-sm text-gray-500">No Auctions.</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -144,7 +144,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
         )}
         {manageAuctionReverseTab === "won" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Gavel className="h-5 w-5 text-orange-500 animate-bounce" />
                 Auctions Awarded to Me
@@ -153,7 +153,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
             {awardedAuctions.length === 0 ? (
               <p className="text-sm text-gray-500">No Awarded Auctions</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -218,7 +218,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
         )}
         {manageAuctionReverseTab === "lost" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Gavel className="h-5 w-5 text-orange-500 animate-bounce" />
                 Auctions Not Awarded
@@ -227,7 +227,7 @@ export const ReverseAuctionsView: React.FC<ReverseAuctionsViewProps> = ({
             {lostBids.length === 0 ? (
               <p className="text-sm text-gray-500">Auctions Not Awarded</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>

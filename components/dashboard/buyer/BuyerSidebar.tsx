@@ -14,7 +14,8 @@ interface BuyerSidebarProps {
   onSelectSection: (section: any) => void;
   onSelectReverseTab: (tab: any) => void;
   onSelectForwardTab: (tab: any) => void;
-  forwardAuctionCount: number;
+  activeForwardAuctionCount: number;
+  wonAuctionCount: number;
   reverseAuctionCount: number;
   buyNowCount: number;
 }
@@ -25,7 +26,8 @@ export const BuyerSidebar: React.FC<BuyerSidebarProps> = ({
   onSelectSection,
   onSelectReverseTab,
   onSelectForwardTab,
-  forwardAuctionCount,
+  activeForwardAuctionCount,
+  wonAuctionCount,
   reverseAuctionCount,
   buyNowCount,
 }) => {
@@ -57,7 +59,9 @@ export const BuyerSidebar: React.FC<BuyerSidebarProps> = ({
             </span>
           </div>
           <div className="flex items-center gap-6">
-            <span className="text-5xl font-black">{forwardAuctionCount}</span>
+            <span className="text-5xl font-black">
+              {activeForwardAuctionCount}
+            </span>
             <p
               className={`text-[11px] leading-tight font-medium ${
                 selectedSection === "forwardAuctions"
@@ -144,6 +148,44 @@ export const BuyerSidebar: React.FC<BuyerSidebarProps> = ({
           </p>
         </div>
       </div>
+
+      {/* Won Auctions Card - Visible in Forward/Marketplace */}
+      {(selectedMode === "forward" || selectedMode === "marketplace") && (
+        <div
+          onClick={() => onSelectSection("wonAuctions")}
+          className={`cursor-pointer transition-all p-5 rounded-2xl border ${
+            selectedSection === "wonAuctions"
+              ? "bg-[#131eba] text-white border border-[#131eba]"
+              : "bg-white text-gray-900 border-blue-300 hover:border-blue-200 hover:shadow-md"
+          }`}
+        >
+          <div className="flex items-center gap-2 mb-5">
+            <TrendingUp
+              className={`h-6 w-6 ${
+                selectedSection === "wonAuctions"
+                  ? "text-white"
+                  : "text-orange-400"
+              }`}
+            />
+            <span className="text-sm font-bold uppercase tracking-wider">
+              Won Auctions
+            </span>
+          </div>
+          <div className="flex items-center gap-6">
+            <span className="text-5xl font-black">{wonAuctionCount}</span>
+            <p
+              className={`text-[11px] leading-tight font-medium ${
+                selectedSection === "wonAuctions"
+                  ? "text-blue-100"
+                  : "text-gray-500"
+              }`}
+            >
+              Auctions,
+              <br />I have won
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

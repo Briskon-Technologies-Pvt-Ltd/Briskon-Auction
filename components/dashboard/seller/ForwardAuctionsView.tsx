@@ -83,7 +83,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
 
   return (
     <div>
-      <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow">
+      <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow pt-4">
         {manageAuctionTab !== "create" && (
           <div className="flex flex-wrap gap-2 mb-4">
             <button
@@ -153,17 +153,6 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             >
               Evaluate Bids ({evaluateAuctions.length})
             </button>
-            <button
-              onClick={() => setManageAuctionTab("winners")}
-              className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm 
-        ${
-          manageAuctionTab === "winners"
-            ? "bg-[#131eba] text-white shadow-md"
-            : "bg-white border border-blue-300 hover:bg-blue-50 hover:border-blue-400"
-        }`}
-            >
-              Winners - Sold Items ({sales.length})
-            </button>
           </div>
         )}
 
@@ -171,7 +160,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
 
         {manageAuctionTab === "live" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Gavel className="h-5 w-5 text-orange-500 animate-bounce" />
                 Live Auctions
@@ -184,7 +173,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             {liveAuctions.length === 0 ? (
               <p className="text-sm text-gray-500">No sold items yet.</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -275,7 +264,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
         )}
         {manageAuctionTab === "upcoming" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Calendar className="h-4 w-4 animate-bounce" />
                 Upcoming Auctions
@@ -288,7 +277,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             {upcomingAuctions.length === 0 ? (
               <p className="text-sm text-gray-500">Upcoming Auction</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -387,7 +376,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
         )}
         {manageAuctionTab === "Evaluate" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Lock className="h-4 w-4 text-blue-500  animate-bounce" />
                 Evaluate Auctions - Declare Winners
@@ -400,7 +389,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             {evaluateAuctions.length === 0 ? (
               <p className="text-sm text-gray-500">No Evaluate Auctions</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -494,7 +483,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
         )}
         {manageAuctionTab === "pending" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Hourglass className="h-4 w-4 text-yellow-500 animate-bounce" />
                 Approval Pending
@@ -507,7 +496,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             {approvalPendings.length === 0 ? (
               <p className="text-sm text-gray-500">Approval Pending</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -600,7 +589,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
         )}
         {manageAuctionTab === "rejected" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <XCircle className="h-4 w-4 text-red-500 animate-bounce" />
                 Rejected
@@ -613,7 +602,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             {approvalRejected.length === 0 ? (
               <p className="text-sm text-gray-500">Rejected </p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -685,7 +674,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
         )}
         {manageAuctionTab === "unsold" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 pt-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 <Archive className="h-5 w-5 text-red-500 animate-bounce" />
                 Unsold Items
@@ -698,7 +687,7 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
             {unsoldSales.length === 0 ? (
               <p className="text-sm text-gray-500">No sold items yet.</p>
             ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
+              <div className="overflow-x-auto rounded-md mt-6 pb-12">
                 <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                   <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                     <tr>
@@ -753,82 +742,6 @@ export const ForwardAuctionsView: React.FC<ForwardAuctionsViewProps> = ({
                           >
                             Re-list
                           </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        )}
-
-        {manageAuctionTab === "winners" && (
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold flex items-center gap-2">
-                <PackageCheck className="h-5 w-5 text-blue-500 animate-bounce" />
-                Sold Items (Winners)
-              </h2>
-              <AnimatedButton
-                label="Create Auction"
-                onClick={() => setSelectedSection("createAuction")}
-              />
-            </div>
-            {sales.length === 0 ? (
-              <p className="text-sm text-gray-500">No sold items yet.</p>
-            ) : (
-              <div className="overflow-x-auto rounded-md mt-6">
-                <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
-                  <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
-                    <tr>
-                      <th className="px-4 py-2 text-left">Auction Name</th>
-                      <th className="px-4 py-2 text-left">Format</th>
-                      <th className="px-4 py-2 text-left">Category</th>
-                      <th className="px-4 py-2 text-left">Starting Bid</th>
-                      <th className="px-4 py-2 text-left">Sold Price</th>
-                      <th className="px-4 py-2 text-left">Buyer Name</th>
-                      <th className="px-4 py-2 text-left">Sold Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sales.map((sale, idx) => (
-                      <tr
-                        key={idx}
-                        className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                      >
-                        <td className="p-2">
-                          <Link
-                            href={`/auctions/${sale.id}`}
-                            className="flex items-center gap-2 text-gray-700 dark:text-gray-100 hover:underline"
-                          >
-                            <img
-                              src={sale.productimages}
-                              alt={sale.productname}
-                              className="w-6 h-6 rounded-full object-cover"
-                            />
-                            {sale.productname}
-                          </Link>
-                        </td>
-                        <td className="px-4 py-2 text-gray-600 capitalize">
-                          {sale.format}
-                        </td>
-                        <td className="px-4 py-2 text-gray-600 capitalize">
-                          {sale.category?.handle}
-                        </td>
-                        <td className="px-4 py-2 text-gray-600">
-                          ${sale.starting_bid}
-                        </td>
-                        <td className="px-4 py-2 text-gray-800 font-bold">
-                          ${sale.salePrice}
-                        </td>
-                        <td className="px-4 py-2 text-gray-600 capitalize">
-                          {sale.buyer}
-                        </td>
-                        <td className="px-4 py-2 text-gray-600">
-                          {sale.saleDate
-                            ? formatDateTime(new Date(sale.saleDate))
-                            : "-"}
                         </td>
                       </tr>
                     ))}

@@ -6,6 +6,7 @@ import {
   Settings,
   User,
   TrendingDown,
+  PackageCheck,
 } from "lucide-react";
 
 interface SellerSidebarProps {
@@ -17,6 +18,7 @@ interface SellerSidebarProps {
   forwardAuctionCount: number;
   buyNowCount: number;
   reverseAuctionCount: number;
+  soldItemsCount: number;
 }
 
 export const SellerSidebar: React.FC<SellerSidebarProps> = ({
@@ -28,6 +30,7 @@ export const SellerSidebar: React.FC<SellerSidebarProps> = ({
   forwardAuctionCount,
   buyNowCount,
   reverseAuctionCount,
+  soldItemsCount,
 }) => {
   if (
     selectedMode !== "forward" &&
@@ -150,6 +153,42 @@ export const SellerSidebar: React.FC<SellerSidebarProps> = ({
           >
             Products,
             <br />I have listed
+          </p>
+        </div>
+      </div>
+
+      {/* Sold Items Card */}
+      <div
+        onClick={() => {
+          onSelectSection("soldItems");
+        }}
+        className={`cursor-pointer transition-all p-5 rounded-2xl border ${
+          selectedSection === "soldItems"
+            ? "bg-[#131eba] text-white border border-[#131eba]"
+            : "bg-white text-gray-900 border-blue-300 hover:border-blue-200 hover:shadow-md"
+        }`}
+      >
+        <div className="flex items-center gap-2 mb-5">
+          <PackageCheck
+            className={`h-6 w-6 ${
+              selectedSection === "soldItems" ? "text-white" : "text-orange-400"
+            }`}
+          />
+          <span className="text-sm font-bold uppercase tracking-wider">
+            Sold Items
+          </span>
+        </div>
+        <div className="flex items-center gap-6">
+          <span className="text-5xl font-black">{soldItemsCount}</span>
+          <p
+            className={`text-[11px] leading-tight font-medium ${
+              selectedSection === "soldItems"
+                ? "text-blue-100"
+                : "text-gray-500"
+            }`}
+          >
+            Items,
+            <br />I have sold
           </p>
         </div>
       </div>

@@ -92,7 +92,7 @@ export const BuyerReverseAuctionsView: React.FC<
   return (
     <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow border border-blue-300">
       {/* Tab Navigation */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4 pt-4">
         <button
           onClick={() => setManageAuctionTab("live")}
           className={`px-7 py-[6px] my-2 rounded-full font-light text-xs shadow-sm ${
@@ -174,7 +174,7 @@ export const BuyerReverseAuctionsView: React.FC<
       {/* Live Tab */}
       {manageAuctionTab === "live" && (
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 pt-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Gavel className="h-5 w-5 text-orange-500 animate-bounce" />
               Live Reverse Auctions
@@ -187,7 +187,7 @@ export const BuyerReverseAuctionsView: React.FC<
           {liveAuctions.length === 0 ? (
             <p className="text-sm text-gray-500">No live auctions.</p>
           ) : (
-            <div className="overflow-x-auto rounded-md mt-6">
+            <div className="overflow-x-auto rounded-md mt-6 pb-12">
               <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                 <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                   <tr>
@@ -267,7 +267,7 @@ export const BuyerReverseAuctionsView: React.FC<
       {/* Upcoming Tab */}
       {manageAuctionTab === "upcoming" && (
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 pt-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Calendar className="h-4 w-4 animate-bounce" />
               Upcoming Reverse Auctions
@@ -280,7 +280,7 @@ export const BuyerReverseAuctionsView: React.FC<
           {upcomingAuctions.length === 0 ? (
             <p className="text-sm text-gray-500">No upcoming auctions.</p>
           ) : (
-            <div className="overflow-x-auto rounded-md mt-6">
+            <div className="overflow-x-auto rounded-md mt-6 pb-12">
               <table className="min-w-full text-xs border border-gray-100 dark:border-gray-800">
                 <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                   <tr>
@@ -381,7 +381,7 @@ export const BuyerReverseAuctionsView: React.FC<
       {/* Pending Tab */}
       {manageAuctionTab === "pending" && (
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 pt-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Hourglass className="h-4 w-4 text-yellow-500 animate-bounce" />
               Reverse Auctions Pending Approval
@@ -394,7 +394,7 @@ export const BuyerReverseAuctionsView: React.FC<
           {approvalPendings.length === 0 ? (
             <p className="text-sm text-gray-500">No Auction Pending Approval</p>
           ) : (
-            <div className="overflow-x-auto rounded-md mt-6">
+            <div className="overflow-x-auto rounded-md mt-6 pb-12">
               <table className="min-w-full text-sm border border-gray-100 dark:border-gray-800">
                 <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                   <tr>
@@ -487,7 +487,7 @@ export const BuyerReverseAuctionsView: React.FC<
       {/* Award Tab */}
       {manageAuctionTab === "award" && (
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 pt-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Medal className="h-4 w-4 text-green-700 animate-bounce" />
               Awarded Suppliers (Winners)
@@ -500,7 +500,7 @@ export const BuyerReverseAuctionsView: React.FC<
           {awardedAuctions.length === 0 ? (
             <p className="text-sm text-gray-500">No Awarded Auctions</p>
           ) : (
-            <div className="overflow-x-auto rounded-md mt-6">
+            <div className="overflow-x-auto rounded-md mt-6 pb-12">
               <table className="min-w-full text-sm border border-gray-100 dark:border-gray-800">
                 <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                   <tr>
@@ -562,7 +562,7 @@ export const BuyerReverseAuctionsView: React.FC<
       {/* Contract Tab */}
       {manageAuctionTab === "contract" && (
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 pt-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Trophy className="h-4 w-4 text-yellow-500 animate-bounce" />
               View Supplier Bids and Declare Winner
@@ -575,7 +575,7 @@ export const BuyerReverseAuctionsView: React.FC<
           {bidRecevied.length === 0 ? (
             <p className="text-sm text-gray-500">No Award Contract Auctions</p>
           ) : (
-            <div className="overflow-x-auto rounded-md mt-6">
+            <div className="overflow-x-auto rounded-md mt-6 pb-12">
               <table className="min-w-full text-sm border border-gray-100 dark:border-gray-800">
                 <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                   <tr>
@@ -664,7 +664,7 @@ export const BuyerReverseAuctionsView: React.FC<
       {/* Rejected Tab */}
       {manageAuctionTab === "rejected" && (
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 pt-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <XCircle className="h-4 w-4 text-red-500 animate-bounce" />
               Reverse Auctions Rejected by Admin
@@ -677,7 +677,7 @@ export const BuyerReverseAuctionsView: React.FC<
           {approvalRejected.length === 0 ? (
             <p className="text-sm text-gray-500">No Auction Admin Rejected</p>
           ) : (
-            <div className="overflow-x-auto rounded-md mt-6">
+            <div className="overflow-x-auto rounded-md mt-6 pb-12">
               <table className="min-w-full text-sm border border-gray-100 dark:border-gray-800">
                 <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                   <tr>
@@ -751,7 +751,7 @@ export const BuyerReverseAuctionsView: React.FC<
       {/* Closed Tab */}
       {manageAuctionTab === "closed" && (
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 pt-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Lock className="h-4 w-4 text-red-500 animate-bounce" />
               Completed / Ended Reverse Auctions
@@ -764,7 +764,7 @@ export const BuyerReverseAuctionsView: React.FC<
           {closedAuctions.length === 0 ? (
             <p className="text-sm text-gray-500">Closed Auction</p>
           ) : (
-            <div className="overflow-x-auto rounded-md mt-6">
+            <div className="overflow-x-auto rounded-md mt-6 pb-12">
               <table className="min-w-full text-sm border border-gray-100 dark:border-gray-800">
                 <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
                   <tr>

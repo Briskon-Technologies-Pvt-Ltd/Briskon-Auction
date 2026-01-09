@@ -160,15 +160,15 @@ export default function LoginPage() {
             <div className="space-y-6">
               <div className="flex items-center gap-3">
                 <Image
-                  src="/briskon-logo.svg"
+                  src="/briskon-auction-logo.svg"
                   alt="Briskon Logo"
                   width={150}
                   height={44}
                   className="h-9 w-auto"
                 />
-                <span className="px-2.5 py-1 rounded text-[12px] font-normal bg-[#313eba] text-white tracking-[0.15em] uppercase shadow-sm">
+                {/* <span className="px-2.5 py-1 rounded text-[12px] font-normal bg-[#313eba] text-white tracking-[0.15em] uppercase shadow-sm">
                   Auction
-                </span>
+                </span> */}
               </div>
               <p className="text-gray-400 text-sm leading-relaxed font-medium">
                 Enter your email and password to access your account.
@@ -288,7 +288,9 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#313eba] hover:bg-[#313eba]/80 text-white font-semibold py-4 rounded-[2rem] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl shadow-blue-500/20 active:scale-[0.98] tracking-widest uppercase text-xs"
+                className="w-full bg-[#313eba] hover:bg-[#313eba]/80 text-white font-semibold py-4 
+                rounded-[2rem] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl
+                 shadow-blue-500/20 active:scale-[0.98] tracking-widest  text-xs"
               >
                 {loading ? (
                   <>
